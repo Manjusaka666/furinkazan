@@ -1,12 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Art from '../components/Art.astro';
-import { STAGES, lessonsOf, lessons } from '../data/lessons/index.js';
-import { getCollection } from 'astro:content';
+import { STAGES, lessonsOf } from '../data/lessons/index.js';
 import { CATS } from '../data/eras.js';
 import { LEVELS, levelsOf } from '../data/course/index.js';
-import works from '../data/library/index.json';
+import { anime } from '../data/anime.js';
+import { scenes } from '../data/scenes.js';
 import { ruby } from '../lib/ruby.js';
+import works from '../data/library/index.json';
 
 const essays = await getCollection('culture');
 const totalWords = Object.values(LEVELS).reduce((n, l) => n + l.words.length, 0);
@@ -15,15 +17,24 @@ const meta = (key) => [
   ...levelsOf(key).map(([, l]) => `${l.name} ${l.words.length} 词`),
 ].filter(Boolean).join('，');
 const POS = { wind: '60% 30%', forest: 'center 35%', fire: 'center 22%', mountain: 'center 40%' };
+const DOORS = [
+  ['/kana/', '五十音', '从第一个假名开始，看笔顺动画，听发音。'],
+  ['/anime/', `${anime.length} 部动漫`, '角色怎么说话，名台词的语法，现实中的圣地。'],
+  ['/scenes/', `${scenes.length} 个情景`, '便利店、车站、温泉、居酒屋、神社。'],
+  ['/words/', `${totalWords} 个词`, '随便搜，看中了就加入复习。'],
+  ['/kanji/', '常用汉字', '每个字的笔顺、音读训读和用词。'],
+  ['/library/', `${works.length} 部原文`, '从桃太郎读到中岛敦和坂口安吾。'],
+];
 ---
-<Base home title="風林火山：从零开始的日语与日本文化" desc="零基础日语课程，从假名到 N1 和原文阅读，穿插日本的历史、文学、美学、饮食和中日文化往来。例句和读物来自母语者的公开文本，免费，账号可选。">
+<Base home title="風林火山：从零到读原文的日语学习站" desc={`从五十音到 N1 和原文阅读。${totalWords} 个词、${anime.length} 部动漫、${scenes.length} 个情景、${works.length} 部原文，全部带罗马音。免费，不用注册，想学什么学什么。`}>
   <div class="home-grid">
     <section class="hero" aria-labelledby="site-title">
       <h1 class="banner brush" id="site-title" lang="ja">風林火山</h1>
       <div class="hero-text">
-        <p class="lede">从第一个假名开始，一直读到露伴和中岛敦。</p>
-        <p>{lessons.length} 个主题课之外，还有 {totalWords} 个分级词和 {works.length} 部原文。例句和读物都出自母语者，学多少、学多快由你定。</p>
-        <a class="cta" href="/learn/sounds/" id="continue">开始第一课</a>
+        <p class="lede">不用注册，也没有学习计划。想学什么，就从什么开始。</p>
+        <p>例句和读物都出自母语者，所有日语都标注假名和罗马音，进度只保存在你的浏览器里。</p>
+        <p id="mine"></p>
+        <a class="cta" href="/kana/">从五十音开始</a>
         <div class="today" id="today"></div>
       </div>
     </section>
@@ -35,22 +46,23 @@ const POS = { wind: '60% 30%', forest: 'center 35%', fire: 'center 22%', mountai
           <div>
             <h2><span class="line brush" lang="ja">{s.line}</span>{s.name}</h2>
             <p>{s.desc}</p>
-            <p class="meta">{meta(key)} <span data-stage-done={key}></span></p>
+            <p class="meta">{meta(key)}</p>
           </div>
         </a>
       ))}
     </div>
   </div>
+  <section class="doors" aria-label="从这里开始">
+    {DOORS.map(([href, t, x]) => <a class="door" href={href}><strong>{t}</strong><span>{x}</span></a>)}
+  </section>
   <section class="home-culture">
-    <h2>课与课之间</h2>
-    <p>语言长在文化里。一句 <span lang="ja">いただきます</span> 背后是和食，一个「侘」字背后是一只宋代的茶碗。{essays.length} 篇短文，都标明了出处，日语词点一下就能听。</p>
+    <h2>语言长在文化里</h2>
+    <p>{essays.length} 篇标明出处的短文，讲日本的历史、文学、美学、饮食，以及它和中国古代文化的来往。</p>
     <ul class="cats">
       {Object.entries(CATS).map(([k, c]) => <li><a href={`/culture/#${k}`}>{c.zh}</a></li>)}
-      <li><a href="/library/">文库</a></li>
       <li><a href="/history/">日本史年表</a></li>
-      <li><a href="/kana/">假名表与笔顺</a></li>
+      <li><a href="/history/#sengoku">战国细表</a></li>
     </ul>
   </section>
   <script>import '../scripts/home.js';</script>
-  <template id="lesson-index" data-slugs={JSON.stringify(lessons.map((l) => [l.slug, l.stage, l.n]))}></template>
 </Base>

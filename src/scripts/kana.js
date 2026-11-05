@@ -1,13 +1,12 @@
 import { GOJUON } from '../lib/kana.js';
 import { say } from './app.js';
+import { drawStrokes } from './strokes.js';
 
-const SVG = 'http://www.w3.org/2000/svg';
 const $ = (id) => document.getElementById(id);
 const root = $('kana');
 const dialog = $('k-dialog');
 const cellsAll = GOJUON.flatMap((r) => r.cells.filter(Boolean));
 let script = 'hira';
-let strokes; // fetched once, on first open
 let current;
 
 const col = () => (script === 'hira' ? 1 : 2);
@@ -18,23 +17,7 @@ document.querySelectorAll('input[name="script"]').forEach((r) => r.addEventListe
   ask();
 }));
 
-async function draw(char) {
-  const svg = $('k-stroke');
-  svg.replaceChildren();
-  try {
-    strokes ??= await fetch('/data/strokes.json').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
-  } catch {
-    strokes = undefined; // allow a retry on the next open
-    return;
-  }
-  (strokes[char] ?? []).forEach((d, i) => {
-    const p = document.createElementNS(SVG, 'path');
-    p.setAttribute('d', d);
-    p.setAttribute('pathLength', '1');
-    p.style.animationDelay = `${i * 0.75}s`;
-    svg.append(p);
-  });
-}
+const draw = (char) => drawStrokes($('k-stroke'), char);
 
 function open(c) {
   current = c;

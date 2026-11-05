@@ -11,6 +11,10 @@ const GROUPS = [
     ['ひろがる（Hirogaru）', 'https://hirogaru-nihongo.jp/'],
     ['NHK WORLD-JAPAN 简明日语（中文版）', 'https://www3.nhk.or.jp/nhkworld/lesson/zh/'],
     ['JLPT 官方样题 N5', 'https://www.jlpt.jp/samples/n5.html'],
+    ['NPO 多読：にほんご多読ブックス', 'https://tadoku.org/japanese/', '按难度分级的免费读物，配合本站词汇使用。'],
+    ['NHK News Web Easy', 'https://www3.nhk.or.jp/news/easy/', '用简单日语写的新闻，带注音和朗读。'],
+    ['青空朗読', 'https://aozoraroudoku.jp/', '志愿者朗读的青空文库作品。本站没有原声，想听文学作品可以来这里。'],
+    ['Jisho', 'https://jisho.org/', '查词。'],
   ]],
   ['例句与词表', [
     ['Tatoeba', 'https://tatoeba.org/en/downloads', '课程和词汇里的例句，只取自声明日语为母语的作者，CC BY 2.0 FR。每句都标明了编号和作者，中文译文也来自 Tatoeba，已转为简体。'],
@@ -18,6 +22,8 @@ const GROUPS = [
     ['Japanese-Chinese-thesaurus', 'https://github.com/lxl66566/Japanese-Chinese-thesaurus', '中文释义的主要来源，以 Unlicense 发布，但上游来历不明，释义可能有错。'],
     ['中文维基词典（经 kaikki.org 提取）', 'https://kaikki.org/zhwiktionary/', '补充中文释义，CC BY-SA。'],
     ['JMdict（EDRDG，经 jmdict-simplified）', 'https://www.edrdg.org/edrdg/licence.html', '没有中文释义的词用它的英文释义，标记为「英」，CC BY-SA 4.0。'],
+    ['KANJIDIC2（EDRDG）', 'https://www.edrdg.org/wiki/index.php/KANJIDIC_Project', '常用汉字的音读、训读和英文释义，CC BY-SA 4.0。'],
+    ['kuromoji.js 与 IPADIC', 'https://github.com/takuyaa/kuromoji.js', '罗马音在构建时由它分词后自动生成，不是人工标注，个别词的读法或分词可能有错。'],
   ]],
   ['文学原文', [
     ['青空文库', 'https://www.aozora.gr.jp/', '文库的全文来源，每部作品都标明了底本、入力和校正者。本站只收录作者去世超过七十年的作品。'],
@@ -29,6 +35,9 @@ const GROUPS = [
   ['历史、艺能与饮食', [
     ['UNESCO：和食', 'https://ich.unesco.org/en/RL/washoku-traditional-dietary-cultures-of-the-japanese-notably-for-the-celebration-of-new-year-00869'],
     ['农林水产省：日本の食文化', 'https://www.maff.go.jp/j/keikaku/syokubunka/culture/'],
+    ['农林水产省：うちの郷土料理', 'https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/', '各都道府县的乡土料理介绍。'],
+    ['ANIME TOURISM 88（アニメツーリズム協会）', 'https://animetourism88.com/', '动漫圣地的选定名录。'],
+    ['日语维基百科', 'https://ja.wikipedia.org/', '多数短文的事实依据，具体页面列在每篇末尾。维基是二手资料，引用时请再查原典。'],
     ['文化デジタルライブラリー（日本艺术文化振兴会）', 'https://www2.ntj.jac.go.jp/dglib/'],
     ['国立歴史民俗博物館', 'https://www.rekihaku.ac.jp/'],
     ['国立国会図書館：日本の暦', 'https://www.ndl.go.jp/koyomi/'],
@@ -38,7 +47,7 @@ const GROUPS = [
     ['山梨市：風林火山の旗', 'https://www.city.yamanashi.yamanashi.jp/site/cultural-assets/1658.html'],
   ]],
   ['技术与设计', [
-    ['KanjiVG', 'https://kanjivg.tagaini.net/', '假名笔顺数据，CC BY-SA 3.0。'],
+    ['KanjiVG', 'https://kanjivg.tagaini.net/', '假名和汉字的笔顺数据，CC BY-SA 3.0。'],
     ['Shippori Mincho', 'https://fonts.google.com/specimen/Shippori+Mincho', '正文日文字体，SIL OFL。'],
     ['Yuji Syuku', 'https://fonts.google.com/specimen/Yuji+Syuku', '标题毛笔字体，SIL OFL。'],
     ['配色：「宋式配色」', 'https://xhslink.cn/o/2TTGQPZAti', 'PRID Design 整理，杜柏均在小红书分享。'],
@@ -48,7 +57,7 @@ const GROUPS = [
 <Base title="资料来源与致谢" desc="本站使用的公开教材、文献、图像与字体。">
   <div class="page-head">
     <h1>资料来源与致谢</h1>
-    <p>例句和读物来自母语者的公开文本。入门课的对话、语法说明、练习题和中文短文由本站编写，没有经过母语教师审校。如果发现错误，请以下面的资料为准。</p>
+    <p>例句和读物来自母语者的公开文本。语法说明、练习题、中文短文、情景和动漫介绍由本站编写，没有经过母语教师审校。如果发现错误，请以下面的资料为准。</p>
   </div>
   <div class="src-list">
     {GROUPS.map(([h, items]) => (
@@ -60,8 +69,12 @@ const GROUPS = [
       </section>
     ))}
     <section>
+      <h2>动漫</h2>
+      <p>本站不使用任何动漫的画面、字幕或剧本。动漫页只有作品介绍、相关词汇和极少量为讲解语法而引用的短句，版权属于原作者。正版观看请到各平台。</p>
+    </section>
+    <section>
       <h2>配图</h2>
-      <p>全部为博物馆以 CC0 开放的馆藏。</p>
+      <p>全部为博物馆以公有领域或 CC0 开放的馆藏。</p>
       <ul>
         {Object.values(ART).map((a) => <li><a href={a.url} rel="noopener">{a.by}『{a.title}』</a>，{a.date}，{a.museum}</li>)}
       </ul>

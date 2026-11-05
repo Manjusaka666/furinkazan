@@ -1,8 +1,8 @@
 ---
 title: 甲斐之虎，越后之龙
 ja: 川中島{かわなかじま}の戦{たたか}い
-cat: sengoku
-order: 3
+cat: history
+order: 23
 art: kawanakajima
 art2: kenshin
 summary: 信玄和谦信在同一片河滩上对峙了十二年。最有名的场面出自『甲陽軍鑑』，而谦信还留下一首汉诗。

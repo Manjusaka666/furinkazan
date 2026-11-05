@@ -1,0 +1,60 @@
+---
+const { rows, script = 'hira' } = Astro.props;
+const col = script === 'hira' ? 1 : 2;
+---
+<section class="sec" data-kana-pad data-col={col}>
+  <div class="sec-h"><h2 lang="ja">書き順</h2><span>点一个假名，看它一笔一笔写出来</span></div>
+  <div class="pad">
+    <svg class="stroke" viewBox="0 0 109 109" aria-hidden="true"></svg>
+    <div class="pad-info">
+      <p class="pad-char" lang="ja"></p>
+      <p class="pad-ro"></p>
+      <p class="pad-src"></p>
+      <div class="row">
+        <button type="button" class="btn" data-pad-say>听发音</button>
+        <button type="button" class="btn ghost" data-pad-again>再写一遍</button>
+      </div>
+    </div>
+  </div>
+  <div class="kana-table">
+    {rows.map((r) => (
+      <div class="kana-row">
+        <span class="r" lang="ja">{r.row}</span>
+        {r.cells.map((c) => c ? (
+          <button type="button" class="kcell" data-pad={JSON.stringify(c)}>
+            <span lang="ja">{c[col]}</span><small>{c[0]}</small>
+          </button>
+        ) : <span class="kempty"></span>)}
+      </div>
+    ))}
+  </div>
+</section>
+<script>
+  import { drawStrokes } from '../scripts/strokes.js';
+  import { say } from '../scripts/app.js';
+
+  const root = document.querySelector('[data-kana-pad]');
+  const col = Number(root.dataset.col);
+  const svg = root.querySelector('.stroke');
+  let char;
+  const show = (cell) => {
+    const c = JSON.parse(cell.dataset.pad);
+    char = c[col];
+    root.querySelector('.pad-char').textContent = char;
+    root.querySelector('.pad-ro').textContent = c[0];
+    const src = c[col + 2];
+    root.querySelector('.pad-src').textContent = src ? `来自汉字「${src}」` : '';
+    root.querySelectorAll('[data-pad]').forEach((b) => b.toggleAttribute('data-on', b === cell));
+    drawStrokes(svg, char);
+  };
+  root.addEventListener('click', (e) => {
+    const cell = e.target.closest('[data-pad]');
+    if (cell) { show(cell); say(char); }
+    if (e.target.closest('[data-pad-say]')) say(char);
+    if (e.target.closest('[data-pad-again]')) drawStrokes(svg, char);
+  });
+  // The first kana starts writing itself once the pad scrolls into view, so the feature explains itself.
+  new IntersectionObserver((entries, io) => {
+    if (entries[0].isIntersecting) { show(root.querySelector('[data-pad]')); io.disconnect(); }
+  }).observe(svg);
+</script>

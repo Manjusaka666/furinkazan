@@ -1,8 +1,8 @@
 ---
 title: 京都烧了十一年
 ja: 応仁{おうにん}の乱{らん}
-cat: sengoku
-order: 1
+cat: history
+order: 21
 summary: 1467 年的继承纠纷把全日本的守护大名卷进京都巷战，幕府的权威从此垮了，战国由此开场。
 sources:
   - { t: '応仁の乱（Wikipedia 日本語版）', u: 'https://ja.wikipedia.org/wiki/応仁の乱' }

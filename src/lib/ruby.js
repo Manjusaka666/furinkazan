@@ -13,10 +13,3 @@ export const plain = (s) => s.replace(RUBY, '$1');
 
 /** All-kana version, used for romaji and for matching. */
 export const reading = (s) => s.replace(RUBY, '$2');
-
-/** A tappable Japanese term that speaks itself. */
-export const term = (s) =>
-  `<button type="button" class="term" lang="ja" data-say="${escapeHtml(plain(s))}">${ruby(s)}</button>`;
-
-/** Prose with [[term]] markers. The prose is trusted, repo-authored HTML. */
-export const rich = (s) => s.replace(/\[\[(.+?)\]\]/g, (_, t) => term(t));

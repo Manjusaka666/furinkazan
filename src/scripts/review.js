@@ -1,5 +1,6 @@
 import { dueIds, grade } from '../lib/srs.js';
-import { ruby } from '../lib/ruby.js';
+import { ruby, reading } from '../lib/ruby.js';
+import { toRomaji } from '../lib/kana.js';
 import { getDeck, setDeck } from '../lib/store.js';
 import { say } from './app.js';
 
@@ -34,7 +35,7 @@ function next() {
   const due = dueIds(deck, Date.now()).filter((id) => words[id]);
   stats(due.length);
   if (!Object.keys(deck).length) {
-    return card.replaceChildren(el('p', '', '还没有卡片。学完一课后点「完成本课」，生词就会到这里。'), link('/learn/', '去上课'));
+    return card.replaceChildren(el('p', '', '还没有卡片。在课程、词汇、情景或动漫页面看到想记的词，点「加入复习」，它就会到这里。'), link('/words/', '去找词'));
   }
   if (!due.length) {
     return card.replaceChildren(el('p', '', '到期的卡片都复习完了。可以继续学新内容。'), link('/learn/', '继续学习'));
@@ -53,6 +54,7 @@ function show(id) {
     btn('看答案', 'btn', () => {
       front.innerHTML = ruby(w.ja);
       const back = el('p', 'back', `${w.zh}（${w.n}）`);
+      const ro = el('p', 'ro', toRomaji(reading(w.ja)));
       const rate = el('div', 'row');
       const mark = (ok) => () => {
         deck = getDeck();
@@ -61,7 +63,7 @@ function show(id) {
         next();
       };
       rate.append(btn('忘了', 'btn ghost', mark(false)), btn('记得', 'btn', mark(true)));
-      card.replaceChildren(front, back, rate);
+      card.replaceChildren(front, ro, back, rate);
       say(id);
     }),
   );

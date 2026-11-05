@@ -1,8 +1,8 @@
 ---
 title: 跨海的战争
 ja: 文禄{ぶんろく}・慶長{けいちょう}の役{えき}
-cat: sengoku
-order: 7
+cat: history
+order: 27
 summary: 1592 年秀吉出兵朝鲜，明朝派援军，是战国史中直接牵连中国的一页。中日韩各有不同的名字。
 sources:
   - { t: '文禄・慶長の役（Wikipedia 日本語版）', u: 'https://ja.wikipedia.org/wiki/文禄・慶長の役' }

@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import Enso from '../../components/Enso.astro';
+import { SCENE_GROUPS, scenes } from '../../data/scenes.js';
+import { topicWords } from '../../data/course/index.js';
+import { ruby } from '../../lib/ruby.js';
+import { romanize } from '../../lib/romaji.js';
+---
+<Base title="情景" desc={`${scenes.length} 个真实情景：便利店、车站、温泉、居酒屋、神社、校园，每个都有词汇、母语者例句和罗马音。`} sysJa>
+  <div class="page-head">
+    <h1>情景</h1>
+    <p>按你要去的地方学。{scenes.length} 个场景，彼此独立，从哪个开始都可以。</p>
+  </div>
+  {SCENE_GROUPS.map(([name, list]) => (
+    <section class="stage-block">
+      <h2>{name}</h2>
+      <ul class="lesson-list topic-grid">
+        {list.map((s) => (
+          <li>
+            <a class="topic" href={`/scenes/${s.slug}/`} data-lesson={`scene-${s.slug}`}>
+              <Enso />
+              <span class="l-title"><span lang="ja" set:html={ruby(s.ja)} /><span class="ro">{romanize(s.ja)}</span><span class="l-zh">{s.zh}，{topicWords(s.slug).length} 词</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Base>

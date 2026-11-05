@@ -1,8 +1,8 @@
 ---
 title: 敌在本能寺
 ja: 本能寺{ほんのうじ}の変{へん}
-cat: sengoku
-order: 5
+cat: history
+order: 25
 art: honnoji
 summary: 1582 年 6 月 2 日黎明，明智光秀袭杀信长。那句著名的台词是江户时代用汉文写下来的。
 sources:

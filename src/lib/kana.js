@@ -40,6 +40,15 @@ for (const group of [GOJUON, DAKUON]) {
   for (const { cells } of group) for (const c of cells) if (c) { MAP.set(c[1], c[0]); MAP.set(c[2], c[0]); }
 }
 for (const [r, h, k] of YOON) { MAP.set(h, r); MAP.set(k, r); }
+// Historical kana, loanword spellings and stray small kana, as they turn up in Aozora texts.
+for (const [k, r] of Object.entries({
+  ゐ: 'i', ゑ: 'e', ヰ: 'i', ヱ: 'e', ヴ: 'vu', ヶ: 'ka',
+  ァ: 'a', ィ: 'i', ゥ: 'u', ェ: 'e', ォ: 'o', ぁ: 'a', ぃ: 'i', ぅ: 'u', ぇ: 'e', ぉ: 'o',
+  ャ: 'ya', ュ: 'yu', ョ: 'yo', ゃ: 'ya', ゅ: 'yu', ょ: 'yo',
+  ファ: 'fa', フィ: 'fi', フェ: 'fe', フォ: 'fo', ティ: 'ti', ディ: 'di', デュ: 'dyu', トゥ: 'tu', ドゥ: 'du',
+  シェ: 'she', ジェ: 'je', チェ: 'che', ツァ: 'tsa', ウィ: 'wi', ウェ: 'we', ウォ: 'wo',
+  ヴァ: 'va', ヴィ: 'vi', ヴェ: 've', ヴォ: 'vo',
+})) MAP.set(k, r);
 
 const toKata = (ch) => ch; // katakana are already keys in MAP
 

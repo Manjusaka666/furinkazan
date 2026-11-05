@@ -1,8 +1,8 @@
 ---
 title: 人生五十年
 ja: 桶狭間{おけはざま}の戦{たたか}い
-cat: sengoku
-order: 2
+cat: history
+order: 22
 art: nobunaga
 summary: 1560 年，信长在出阵前跳了一段「敦盛」，然后击败了今川义元。原文留在『信長公記』里。
 sources:

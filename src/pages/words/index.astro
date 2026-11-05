@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import { LEVELS } from '../../data/course/index.js';
+
+const total = Object.values(LEVELS).reduce((n, l) => n + l.words.length, 0);
+---
+<Base title="词汇" desc={`${total} 个 N5 到 N1 的词，可以按汉字、假名、罗马音或中文搜索，配母语者例句，想背哪个就加哪个。`} sysJa>
+  <div class="page-head">
+    <h1>词汇</h1>
+    <p>{total} 个词，常用的排在前面。不分组，不排顺序：搜你想查的词，看中了就加入复习。可以用汉字、假名、罗马音或中文搜索。JLPT 官方不公布词表，这里的分级来自社区整理的版本。</p>
+  </div>
+  <div class="word-tools">
+    <input type="search" id="w-q" placeholder="搜索，比如 食べる、たべる、taberu、吃" aria-label="搜索词汇" />
+    <div class="kana-tabs" role="radiogroup" aria-label="选择级别">
+      {Object.entries(LEVELS).map(([id, l], i) => (
+        <label><input type="radio" name="level" value={id} checked={i === 0} />{l.name}</label>
+      ))}
+      <label><input type="radio" name="level" value="all" />全部</label>
+    </div>
+    <label class="ctl"><input type="checkbox" data-pref="hide-ro" />隐藏罗马音</label>
+    <label class="ctl"><input type="checkbox" data-pref="hide-rt" />隐藏假名注音</label>
+  </div>
+  <p class="w-count" id="w-count" aria-live="polite">正在加载词表……</p>
+  <div class="unit" id="w-list"></div>
+  <div class="unit"><button type="button" class="btn ghost" id="w-more" hidden>再显示 50 个</button></div>
+  <noscript><p class="unit">词汇搜索需要开启 JavaScript。</p></noscript>
+  <script>import '../../scripts/words.js';</script>
+</Base>

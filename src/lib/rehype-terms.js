@@ -1,4 +1,4 @@
-import { rich } from './ruby.js';
+import { rich } from './term.js';
 
 const ONLY_TERM = /^\s*\[\[[^\]]+\]\]\s*$/;
 

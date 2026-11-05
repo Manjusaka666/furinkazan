@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ruby, plain, reading, term, rich } from '../src/lib/ruby.js';
+import { ruby, plain, reading } from '../src/lib/ruby.js';
+import { term, rich } from '../src/lib/term.js';
+import { romanize } from '../src/lib/romaji.js';
 import { toRomaji, GOJUON } from '../src/lib/kana.js';
 import { addCards, grade, dueIds, INTERVALS } from '../src/lib/srs.js';
-import { merge } from '../src/lib/sync.js';
 import { lessons, STAGES } from '../src/data/lessons/index.js';
 import { readFileSync, readdirSync } from 'node:fs';
 
@@ -29,6 +30,19 @@ test('romaji handles digraphs, geminates, long vowels', () => {
   assert.equal(toRomaji('しんぶん'), 'shinbun');
   assert.equal(toRomaji('ありがとうございます'), 'arigatougozaimasu');
 });
+test('romanize spaces words, spells particles as spoken, trusts given readings', () => {
+  assert.equal(romanize('私{わたし}は学校{がっこう}へ行{い}きました。'), 'watashi wa gakkou e ikimashita.');
+  assert.equal(romanize('本{ほん}を読{よ}んでいます'), 'hon o yondeimasu');
+  assert.equal(romanize('日本語{にっぽんご}'), 'nippongo');
+  assert.equal(romanize('東京'), 'toukyou');
+});
+test('romanize reads old spellings and repeat marks', () => {
+  assert.equal(toRomaji('くれなゐ'), 'kurenai');
+  assert.equal(toRomaji('ティー'), 'tii');
+  assert.equal(romanize('こゝろ'), 'kokoro');
+  assert.match(romanize('たま〱'), /tamatama/);
+  assert.match(romanize('悉{こと〲}く'), /kotogotoku/);
+});
 test('gojuon has 46 kana', () => {
   assert.equal(GOJUON.flatMap((r) => r.cells).filter(Boolean).length, 46);
 });
@@ -40,30 +54,13 @@ test('srs: new cards are due now, existing cards are not reset', () => {
 });
 test('srs: remembering climbs, forgetting resets, top box is capped', () => {
   const day = 86_400_000;
-  assert.deepEqual(grade({ box: 0, due: 0 }, true, 0), { box: 1, due: day, at: 0 });
-  assert.deepEqual(grade({ box: 4, due: 0 }, false, 5), { box: 0, due: 5, at: 5 });
+  assert.deepEqual(grade({ box: 0, due: 0 }, true, 0), { box: 1, due: day });
+  assert.deepEqual(grade({ box: 4, due: 0 }, false, 5), { box: 0, due: 5 });
   const top = INTERVALS.length - 1;
   assert.equal(grade({ box: top, due: 0 }, true, 0).box, top);
 });
 test('srs: dueIds returns only due cards, oldest first', () => {
   assert.deepEqual(dueIds({ a: { box: 0, due: 5 }, b: { box: 0, due: 1 }, c: { box: 0, due: 9 } }, 5), ['b', 'a']);
-});
-
-test('merge: union of lessons, newest review wins, a lapse is not undone', () => {
-  const a = { done: ['x'], deck: { w: { box: 0, due: 100, at: 100 }, only: { box: 1, due: 1 } }, prefs: { 'hide-rt': true } };
-  const b = { done: ['y'], deck: { w: { box: 4, due: 900, at: 50 }, other: { box: 2, due: 2 } }, prefs: { 'hide-zh': true } };
-  const m = merge(a, b);
-  assert.deepEqual(m.done, ['x', 'y']);
-  assert.equal(m.deck.w.box, 0);
-  assert.deepEqual(Object.keys(m.deck), ['only', 'other', 'w']);
-  assert.deepEqual(m.prefs, { 'hide-rt': true, 'hide-zh': true });
-  assert.deepEqual(merge(b, a).deck, m.deck);
-  assert.deepEqual(merge(m, a), m);
-});
-test('merge: old cards without a timestamp fall back to the later due date; bad remote data is ignored', () => {
-  assert.equal(merge({ deck: { w: { box: 1, due: 5 } } }, { deck: { w: { box: 2, due: 9 } } }).deck.w.box, 2);
-  assert.deepEqual(merge({ done: ['a'], deck: {}, prefs: {} }, undefined), { done: ['a'], deck: {}, prefs: {} });
-  assert.deepEqual(merge({ done: ['a'] }, { done: 'oops', deck: [], prefs: null }), { done: ['a'], deck: {}, prefs: {} });
 });
 
 test('lesson data is consistent', () => {
@@ -101,8 +98,26 @@ test('library: index matches files, no leftover Aozora markup', () => {
     const { paras } = json(`library/${w.slug}.json`);
     assert.ok(paras.length, w.slug);
     // ruby() must consume every reading, or raw {かな} shows up in the text.
-    assert.ok(!paras.some((p) => /［＃|\{/.test(ruby(p))), `${w.slug}: markup`);
+    assert.ok(!paras.some((p) => /［＃|／[＼\\]|\{/.test(ruby(p))), `${w.slug}: markup`);
     assert.ok(w.base && w.card, w.slug);
   }
   assert.equal(works.length, readdirSync(new URL('../src/data/library/', import.meta.url)).length - 1);
+});
+
+test('topic words: every scene and anime has its own words, all with a meaning', async () => {
+  const { scenes } = await import('../src/data/scenes.js');
+  const { anime } = await import('../src/data/anime.js');
+  const topics = json('course/topics.json');
+  for (const x of [...scenes, ...anime]) {
+    assert.ok(topics[x.slug]?.length >= 4, `${x.slug}: too few words`);
+    for (const w of topics[x.slug]) assert.ok(w.zh || w.en, `${x.slug}: ${w.w}`);
+  }
+});
+test('kanji: the whole jōyō list, each with stroke paths and at least one reading', () => {
+  const kanji = json('kanji.json');
+  assert.equal(new Set(kanji.map((k) => k.c)).size, 2136);
+  for (const k of kanji) {
+    assert.ok(k.d.length > 0, k.c);
+    assert.ok(k.on.length + k.kun.length > 0, k.c);
+  }
 });

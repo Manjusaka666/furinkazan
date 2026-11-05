@@ -1,15 +1,6 @@
 {
   "framework": "astro",
-  "rewrites": [
-    {
-      "source": "/api/auth/:path*",
-      "destination": "https://ep-curly-night-baau6q2j.neonauth.c-8.eu-central-1.aws.neon.tech/furinkazan/auth/:path*"
-    },
-    {
-      "source": "/api/db/:path*",
-      "destination": "https://ep-curly-night-baau6q2j.apirest.c-8.eu-central-1.aws.neon.tech/furinkazan/rest/v1/:path*"
-    }
-  ],
+  "trailingSlash": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -47,15 +38,6 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400, stale-while-revalidate=604800"
-        }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
         }
       ]
     }

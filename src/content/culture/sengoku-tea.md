@@ -1,8 +1,8 @@
 ---
 title: 一座城换不来的茶碗
 ja: 戦国{せんごく}の茶{ちゃ}の湯{ゆ}
-cat: sengoku
-order: 9
+cat: history
+order: 29
 art: jian
 summary: 信长拿茶器赏功臣，一件中国来的茶入可以抵一国。而利休的茶室，只有两张榻榻米大。
 sources:

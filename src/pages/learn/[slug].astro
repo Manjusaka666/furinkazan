@@ -1,8 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { lessons, STAGES } from '../../data/lessons/index.js';
-import { ruby, plain, reading, rich } from '../../lib/ruby.js';
-import { toRomaji } from '../../lib/kana.js';
+import { ruby, plain } from '../../lib/ruby.js';
+import { rich } from '../../lib/term.js';
+import { romanize } from '../../lib/romaji.js';
+import { GOJUON, DAKUON } from '../../lib/kana.js';
+import Controls from '../../components/Controls.astro';
+import KanaPad from '../../components/KanaPad.astro';
 import { lessonExamples } from '../../data/course/index.js';
 import Examples from '../../components/Examples.astro';
 
@@ -11,7 +15,7 @@ export const getStaticPaths = () =>
 
 const { l, prev, next } = Astro.props;
 const s = STAGES[l.stage];
-const showRomaji = l.stage === 'wind' || l.n <= 8; // scaffolding: drop romaji once kana is secure
+const PAD = { 'hiragana-1': [GOJUON.slice(0, 5)], 'hiragana-2': [GOJUON.slice(5)], 'sounds-2': [DAKUON], katakana: [GOJUON, 'kata'] }[l.slug];
 const pad = String(l.irodori ?? 0).padStart(2, '0');
 const dialog = l.dialog ?? [];
 const isSolo = dialog.every(([who]) => !who);
@@ -22,14 +26,13 @@ const vocabIds = l.vocab.map(([ja]) => plain(ja));
   <header class="lesson-head">
     <p class="crumb"><a href={`/learn/#${l.stage}`}>{s.kanji}・{s.name}</a>　第 {l.n} 课</p>
     <h1 class="brush" lang="ja" set:html={ruby(l.title)} />
+    <p class="ro head-ro">{romanize(l.title)}</p>
     <p class="sub">{l.zh}</p>
   </header>
-  <div class="controls" role="group" aria-label="显示选项">
-    <label><input type="checkbox" data-pref="hide-rt" />隐藏假名注音</label>
-    <label><input type="checkbox" data-pref="hide-zh" />隐藏中文，先靠听</label>
-  </div>
+  <Controls />
   <div class="lesson-grid">
     <article>
+      {PAD && <KanaPad rows={PAD[0]} script={PAD[1]} />}
       {native ? (
         <section class="sec">
           <div class="sec-h"><h2 lang="ja">例文</h2><span>母语者写的句子，点一下听发音</span></div>
@@ -44,6 +47,7 @@ const vocabIds = l.vocab.map(([ja]) => plain(ja));
               {who && <span class="who" lang="ja">{who}</span>}
               <div>
                 <button type="button" class="say-line" lang="ja" data-say={plain(ja)} set:html={ruby(ja)} />
+                <p class="ro">{romanize(ja)}</p>
                 <p class="zh">{zh}</p>
               </div>
             </li>
@@ -58,7 +62,7 @@ const vocabIds = l.vocab.map(([ja]) => plain(ja));
           {l.vocab.map(([ja, zh]) => (
             <div>
               <dt><button type="button" class="term" lang="ja" data-say={plain(ja)} set:html={ruby(ja)} /></dt>
-              {showRomaji && <dd class="roma">{toRomaji(reading(ja).replace('〜', ''))}</dd>}
+              <dd class="ro">{romanize(ja)}</dd>
               <dd>{zh}</dd>
             </div>
           ))}
@@ -79,9 +83,9 @@ const vocabIds = l.vocab.map(([ja]) => plain(ja));
         <div class="sec-h"><h2 lang="ja">練習</h2><span>练习</span></div>
         {l.quiz.map((q) => (
           <div class="q" data-quiz data-c={q.c} data-why={q.why}>
-            <p set:html={rich(q.q)} />
+            <p set:html={rich(q.q, { ro: false })} />
             <div class="opts">
-              {q.o.map((o, i) => <button type="button" class="opt" lang={q.ja ? 'ja' : undefined} data-i={i} set:html={rich(o)} />)}
+              {q.o.map((o, i) => <button type="button" class="opt" lang={q.ja ? 'ja' : undefined} data-i={i} set:html={rich(o, { ro: false })} />)}
             </div>
           </div>
         ))}

@@ -1,6 +1,6 @@
 import { SEKKI } from '../data/eras.js';
 import { ruby } from '../lib/ruby.js';
-import { getDone } from '../lib/store.js';
+import { getDone, getDeck } from '../lib/store.js';
 
 /** The solar term in effect on a date, given entries sorted by MM-DD. */
 export function sekkiFor(date) {
@@ -13,21 +13,7 @@ const [name, yomi, , word, gloss] = sekkiFor(new Date());
 const today = document.getElementById('today');
 today.innerHTML = `<span lang="ja"><strong>${ruby(`${name}{${yomi}}`)}</strong></span><br>当令的词：<button type="button" class="term" lang="ja" data-say="${word.replace(/\{[^}]*\}/g, '')}">${ruby(word)}</button>。${gloss}。`;
 
-// Returning learners continue where they stopped.
-const index = JSON.parse(document.getElementById('lesson-index').dataset.slugs);
-const done = new Set(getDone());
-if (done.size) {
-  const next = index.find(([slug]) => !done.has(slug));
-  const cta = document.getElementById('continue');
-  if (next) {
-    cta.href = `/learn/${next[0]}/`;
-    cta.textContent = `继续第 ${next[2]} 课`;
-  } else {
-    cta.href = '/learn/';
-    cta.textContent = '继续学习';
-  }
-  for (const stage of new Set(index.map((l) => l[1]))) {
-    const n = index.filter((l) => l[1] === stage && done.has(l[0])).length;
-    if (n) document.querySelector(`[data-stage-done="${stage}"]`).textContent = `，已完成 ${n} 课`;
-  }
-}
+// Returning learners see what they have under way; nothing here imposes an order.
+const done = getDone().length;
+const cards = Object.keys(getDeck()).length;
+if (done || cards) document.getElementById('mine').textContent = `你已完成 ${done} 个内容，复习卡片 ${cards} 张。`;

@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import { LEVELS, grammarOf } from '../../data/course/index.js';
+---
+<Base title="语法" desc="N5 到 N1 的句型，每个都有中文说明、母语者例句和罗马音。" sysJa>
+  <div class="page-head">
+    <h1>语法</h1>
+    <p>按级别列出的句型。可以当查询表用，遇到不懂的直接跳过去。</p>
+  </div>
+  {Object.entries(LEVELS).map(([id, l]) => (
+    <section class="stage-block">
+      <h2><a href={`/grammar/${id}/`}>{l.name}</a></h2>
+      <ul class="pattern-list">
+        {grammarOf(id).map((g, i) => <li><a lang="ja" href={`/grammar/${id}/#g${i}`}>{g.p}</a></li>)}
+      </ul>
+    </section>
+  ))}
+</Base>

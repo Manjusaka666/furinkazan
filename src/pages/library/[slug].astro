@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Controls from '../../components/Controls.astro';
 import { ruby } from '../../lib/ruby.js';
 
 export const getStaticPaths = () =>
@@ -16,13 +17,10 @@ const { w } = Astro.props;
     {w.subtitle && <p class="sub" lang="ja">{w.subtitle}</p>}
     <p class="sub" lang="ja">{w.author}{w.translator && `　${w.translator} 訳`}</p>
   </header>
-  <div class="controls" role="group" aria-label="阅读选项">
-    <label><input type="checkbox" data-pref="hide-rt" />隐藏假名注音</label>
-    <button type="button" class="btn ghost" id="read-aloud">朗读选中的文字或当前段</button>
-  </div>
+  <Controls zh={false}><button type="button" class="btn ghost" id="read-aloud">朗读选中的文字或当前段</button></Controls>
   <article class="reader">
-    <p class="guide">{w.zh}</p>
-    <div class="text" id="text" lang="ja">
+    <p class="guide">{w.zh}{/旧/.test(w.kana) ? ' 本文用历史假名，罗马音是程序按现代读法生成的，仅供参考。' : ''}</p>
+    <div class="text" id="text" lang="ja" data-slug={w.slug}>
       {w.paras.map((p) => <p set:html={ruby(p)} />)}
     </div>
     <p class="credit">

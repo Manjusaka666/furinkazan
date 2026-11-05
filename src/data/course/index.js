@@ -5,8 +5,9 @@ import n2 from './n2.json';
 import n1 from './n1.json';
 import grammar from './grammar.json';
 import lessonExamples from './lessons.json';
+import topics from './topics.json';
 
-export { lessonExamples };
+export { lessonExamples, topics };
 
 export const LEVELS = {
   n5: { name: 'N5', stage: 'forest', words: n5, desc: '最常用的基础词：人、时间、吃住行。' },
@@ -16,19 +17,14 @@ export const LEVELS = {
   n1: { name: 'N1', stage: 'mountain', words: n1, desc: '论说文和文学里的词，也是读原典的底子。' },
 };
 
-const SIZE = 20;
-
 export const levelsOf = (stage) => Object.entries(LEVELS).filter(([, l]) => l.stage === stage);
 export const grammarOf = (level) => grammar.filter((g) => g.lv.toLowerCase() === level);
 export const gloss = (w) => w.zh ?? `英：${w.en}`;
-export const unitsOf = (level) => {
-  const { words } = LEVELS[level];
-  return Array.from({ length: Math.ceil(words.length / SIZE) }, (_, i) => words.slice(i * SIZE, (i + 1) * SIZE));
-};
+export const topicWords = (slug) => topics[slug] ?? [];
 
-/** Meaning questions drawn from the unit itself, stable across builds. Words with only an English gloss are left out. */
-export function quizOf(unit, seed) {
-  const pool = unit.filter((w) => w.zh);
+/** Meaning questions drawn from the word set itself, stable across builds. English-only glosses are left out. */
+export function quizOf(words, seed = 0) {
+  const pool = words.filter((w) => w.zh);
   if (pool.length < 4) return [];
   const step = Math.floor(pool.length / 3);
   return [0, 1, 2].map((k) => {

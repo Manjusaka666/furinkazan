@@ -1,8 +1,8 @@
 ---
 title: 决定天下的一天
 ja: 関ヶ原{せきがはら}の戦{たたか}い
-cat: sengoku
-order: 8
+cat: history
+order: 28
 summary: 1600 年 9 月 15 日，一场不到一天的会战决定了此后两百六十年。胜者家康一边打仗一边刻书。
 sources:
   - { t: '関ヶ原の戦い（Wikipedia 日本語版）', u: 'https://ja.wikipedia.org/wiki/関ヶ原の戦い' }

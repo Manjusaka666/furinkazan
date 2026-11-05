@@ -6,9 +6,13 @@ import works from '../../data/library/index.json';
 const GROUPS = [
   ['tale', '民间故事', '句子短，重复多，第一次读整篇日语从这里开始。'],
   ['child', '童话与短篇', '日本孩子在语文课上读的作品。'],
+  ['food', '饮食', '寿司、水果、咖啡和泥鳅店，日本作家写吃的。'],
+  ['kaidan', '怪谈与妖怪', '雪女、无耳芳一和牡丹灯笼。'],
   ['china', '中国题材', '日本作家写的唐传奇、『论语』和『汉书』，可以和中文原典对读。'],
-  ['modern', '近代小说', '芥川、漱石和太宰。'],
-  ['sengoku', '战国', '菊池宽的合战谭叙述清楚，坂口安吾和幸田露伴更难也更有个性。'],
+  ['sengoku', '历史与时代小说', '菊池宽的合战谭叙述清楚，坂口安吾和幸田露伴更难也更有个性。'],
+  ['modern', '近代小说', '芥川、漱石、太宰、鸥外和一叶。'],
+  ['poem', '诗与短歌', ''],
+  ['classic', '古典原文', '要读懂需要一点古文知识，罗马音只是按现代读法注的。'],
   ['essay', '随笔与评论', ''],
 ];
 const LINK_ONLY = [
@@ -20,7 +24,7 @@ const byLevel = (a, b) => rank(a)[0] - rank(b)[0] || rank(a)[1] - rank(b)[1];
 <Base title="文库" desc={`${works.length} 部公版日语原文，按难度排列，带作品导读。`} sysJa>
   <div class="page-head">
     <h1>文库</h1>
-    <p>{works.length} 部日本作家的原文，全文来自青空文库。同一组里容易的排在前面，难度标记是本站的估计。这里的书会继续增加。</p>
+    <p>{works.length} 部日本作家的原文，全文来自青空文库。同一组里容易的排在前面，难度标记是本站的估计。这里的书会继续增加。听书可以去<a href="https://aozoraroudoku.jp/" rel="noopener">青空朗读</a>，更简单的分级读物可以去<a href="https://tadoku.org/japanese/" rel="noopener">NPO 多读</a>。</p>
   </div>
   {GROUPS.map(([cat, name, note]) => (
     <section class="stage-block" id={cat}>

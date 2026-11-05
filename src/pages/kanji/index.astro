@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { kanji, GRADES } from '../../data/kanji.js';
+---
+<Base title="常用汉字" desc={`日本常用汉字表的 ${kanji.length} 个字，每个字有动态笔顺、音读训读、罗马音和含这个字的词。`} sysJa>
+  <div class="page-head">
+    <h1>常用汉字</h1>
+    <p>日本常用汉字表的全部 {kanji.length} 个字，按日本学校教的先后分组。不用从头学，点开任何一个字，就能看笔顺、读音和常用词。可以用汉字（简体也行）、假名、罗马音或英文释义搜索。</p>
+  </div>
+  <div class="word-tools">
+    <input type="search" id="k-q" placeholder="搜索，比如 樱、さくら、sakura、cherry" aria-label="搜索汉字" />
+  </div>
+  <p class="w-count" id="k-count" aria-live="polite"></p>
+  <ul class="kanji-grid unit" id="k-results" hidden></ul>
+  <div id="k-groups">
+    {GRADES.map(([g, name]) => {
+      const list = kanji.filter((k) => k.g === g);
+      return (
+        <section class="unit kanji-group">
+          <h2>{name}<span>{list.length} 字</span></h2>
+          <ul class="kanji-grid" lang="ja">
+            {list.map((k) => <li><a href={`/kanji/${k.c}/`}>{k.c}</a></li>)}
+          </ul>
+        </section>
+      );
+    })}
+  </div>
+  <p class="unit fine">笔顺来自 <a href="https://kanjivg.tagaini.net/" rel="noopener">KanjiVG</a>（CC BY-SA 3.0），读音和英文释义来自 <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project" rel="noopener">KANJIDIC2</a>（CC BY-SA 4.0）。</p>
+  <script>import '../../scripts/kanji-search.js';</script>
+</Base>

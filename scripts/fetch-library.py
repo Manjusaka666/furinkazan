@@ -11,7 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 CACHE = pathlib.Path(sys.argv[1])
 OUT = ROOT / "src/data/library"
 CUTOFF = 1955
-MAX_CHARS = 130_000  # beyond this a single static page is too heavy; link out instead
+MAX_CHARS = 200_000  # beyond this a single static page is too heavy; link out instead
 CATALOG_URL = "https://www.aozora.gr.jp/index_pages/list_person_all_extended_utf8.zip"
 
 GAIJI_JIS = re.compile(r"(?:第[34]水準)?(\d)-(\d{1,2})-(\d{1,2})")
@@ -41,6 +41,9 @@ def body_of(text):
     body = re.split(r"\n底本[：:]", body)[0]
     body = re.sub(r"※［＃([^］]*)］", lambda m: gaiji(m.group(1)), body)
     body = re.sub(r"［＃[^］]*］", "", body)
+    # Aozora spells the vertical repeat mark as two plain characters; how much it repeats is the reader's call, so keep one mark.
+    body = re.sub(r"／″[＼\\]", "〲", body)
+    body = re.sub(r"／[＼\\]", "〱", body)
     body = re.sub(r"〔[^〕]*〕", lambda m: m.group(0), body)
     # ｜base《ruby》 and kanji-run《ruby》 become the site's base{ruby}; ruby on kana bases is dropped, ruby.js only marks kanji.
     def rb(m):
@@ -76,8 +79,10 @@ for w in manifest:
     r = entries[0]
     assert r["作品著作権フラグ"] == "なし", w["slug"]
     people = [(e["姓"] + e["名"], e["役割フラグ"], e["没年月日"][:4]) for e in entries]
-    for name, _, died in people:
-        assert died and int(died) <= CUTOFF, f'{w["slug"]}: {name} died {died}, still in copyright under life+70'
+    late = [name for name, _, died in people if name != "作者不詳" and (not died or int(died) > CUTOFF)]
+    if late:  # usually a translator who lived longer than the author
+        skipped.append((w["slug"], f"life+70: {late}"))
+        continue
     url = r["テキストファイルURL"]
     assert url.endswith(".zip"), w["slug"]
     with zipfile.ZipFile(fetch(url, f'{w["id"]}.zip')) as z:
@@ -102,4 +107,4 @@ for w in manifest:
     bad = sum(p.count("〓") for p in paras)
     print(f'{w["slug"]:22} {w["lv"]} {chars:7} chars {len(paras):5} paras  {r["作品名"]} / {author}{"  gaiji-missing:" + str(bad) if bad else ""}')
 (OUT / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=0), encoding="utf8")
-print("works", len(index), "total chars", sum(m["chars"] for m in index), "skipped (too long)", skipped)
+print("works", len(index), "total chars", sum(m["chars"] for m in index), "skipped", skipped)

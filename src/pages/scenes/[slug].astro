@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import Controls from '../../components/Controls.astro';
+import WordList from '../../components/WordList.astro';
+import { scenes } from '../../data/scenes.js';
+import { topicWords } from '../../data/course/index.js';
+import { anime } from '../../data/anime.js';
+import { ruby, plain } from '../../lib/ruby.js';
+import { romanize } from '../../lib/romaji.js';
+
+export const getStaticPaths = () => scenes.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+const { s } = Astro.props;
+const related = anime.filter((a) => a.ties?.some(([href]) => href === `/scenes/${s.slug}/`));
+---
+<Base title={`${plain(s.ja)}：${s.zh}`} desc={s.x} sysJa>
+  <header class="lesson-head">
+    <p class="crumb"><a href="/scenes/">情景</a></p>
+    <h1 lang="ja" set:html={ruby(s.ja)} />
+    <p class="ro head-ro">{romanize(s.ja)}</p>
+    <p class="sub">{s.zh}</p>
+  </header>
+  <Controls />
+  <article class="unit">
+    <p class="guide">{s.x}</p>
+    <WordList words={topicWords(s.slug)} id={`scene-${s.slug}`}>
+      <a href={`/culture/${s.to}/`}>相关文化短文</a>
+      {related.map((a) => <a href={`/anime/${a.slug}/`}>动漫：{a.zh}</a>)}
+      <a href="/scenes/">其他情景</a>
+    </WordList>
+  </article>
+</Base>

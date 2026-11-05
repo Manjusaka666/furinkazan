@@ -1,5 +1,5 @@
 import { addCards } from '../lib/srs.js';
-import { getDeck, setDeck, getDone, setDone, getPrefs, setPrefs, getUser } from '../lib/store.js';
+import { getDeck, setDeck, getDone, setDone, getPrefs, setPrefs } from '../lib/store.js';
 
 // Speech uses the device's own Japanese voice: nothing to download, but quality varies by device.
 const synth = window.speechSynthesis;
@@ -39,6 +39,12 @@ const answer = (btn) => {
   q.append(why);
 };
 
+const addOne = (btn) => {
+  if (!setDeck(addCards(getDeck(), [btn.dataset.add], Date.now()))) return toast('无法保存进度：浏览器禁用了本地存储。');
+  btn.disabled = true;
+  btn.textContent = '已在复习中';
+};
+
 const finish = (btn) => {
   const saved = setDone([...new Set([...getDone(), btn.dataset.finish])])
     && setDeck(addCards(getDeck(), JSON.parse(btn.dataset.vocab), Date.now()));
@@ -54,10 +60,12 @@ document.addEventListener('click', (e) => {
   if (opt) return answer(opt);
   const done = e.target.closest('[data-finish]');
   if (done) finish(done);
+  const add = e.target.closest('[data-add]');
+  if (add) addOne(add);
 });
 
 // Display preferences apply to the whole site and persist.
-const KEYS = ['hide-rt', 'hide-zh'];
+const KEYS = ['hide-rt', 'hide-zh', 'hide-ro'];
 function applyPrefs() {
   const prefs = getPrefs();
   for (const key of KEYS) document.documentElement.toggleAttribute(`data-${key}`, Boolean(prefs[key]));
@@ -74,12 +82,10 @@ document.querySelectorAll('[data-pref]').forEach((box) => {
 function applyDone() {
   const done = new Set(getDone());
   document.querySelectorAll('[data-lesson]').forEach((a) => a.classList.toggle('done', done.has(a.dataset.lesson)));
+  const deck = getDeck();
+  document.querySelectorAll('[data-add]').forEach((b) => { if (deck[b.dataset.add]) { b.disabled = true; b.textContent = '已在复习中'; } });
   const fin = document.querySelector('[data-finish]');
   if (fin && done.has(fin.dataset.finish)) { fin.disabled = true; fin.textContent = fin.dataset.doneText ?? '已完成，生词已加入复习'; }
 }
 applyPrefs();
 applyDone();
-addEventListener('fk:synced', () => { applyPrefs(); applyDone(); });
-
-// Visitors who never signed in do not download the sync code.
-if (getUser()) import('../lib/sync.js').then((m) => m.start());

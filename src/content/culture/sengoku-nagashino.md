@@ -1,8 +1,8 @@
 ---
 title: 铁炮与栅栏
 ja: 長篠{ながしの}の戦{たたか}い
-cat: sengoku
-order: 4
+cat: history
+order: 24
 summary: 1575 年的长篠之战常被说成「三千挺铁炮三段击」。铁炮传入日本的记录里，还有一位中国人。
 sources:
   - { t: '長篠の戦い（Wikipedia 日本語版）', u: 'https://ja.wikipedia.org/wiki/長篠の戦い' }

@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import Controls from '../../components/Controls.astro';
+import Examples from '../../components/Examples.astro';
+import { LEVELS, grammarOf } from '../../data/course/index.js';
+import { romanize } from '../../lib/romaji.js';
+
+export const getStaticPaths = () => Object.keys(LEVELS).map((level) => ({ params: { level } }));
+
+const { level } = Astro.params;
+const lv = LEVELS[level];
+const points = grammarOf(level);
+---
+<Base title={`${lv.name} 语法`} desc={`${lv.name} 的 ${points.length} 个句型，配母语者例句和罗马音。`} stage={lv.stage} sysJa>
+  <div class="page-head">
+    <p class="crumb"><a href="/grammar/">语法</a></p>
+    <h1>{lv.name} 语法</h1>
+    <p>{points.length} 个句型。中文说明由本站编写，例句按句型自动检索，出自母语者，个别可能不够贴切。</p>
+  </div>
+  <Controls />
+  <article class="unit">
+    {points.map((g, i) => (
+      <section class="point" id={`g${i}`}>
+        <h2 lang="ja">{g.p}</h2>
+        <p class="ro">{romanize(g.p.replace(/[〜／]/g, ' '))}</p>
+        <p>{g.zh}</p>
+        {g.ex.length ? <Examples ex={g.ex} /> : <p class="ex-src">暂无母语例句。</p>}
+      </section>
+    ))}
+  </article>
+</Base>

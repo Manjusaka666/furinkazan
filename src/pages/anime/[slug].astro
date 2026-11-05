@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import Controls from '../../components/Controls.astro';
+import WordList from '../../components/WordList.astro';
+import { anime } from '../../data/anime.js';
+import { topicWords } from '../../data/course/index.js';
+import { ruby, plain } from '../../lib/ruby.js';
+import { romanize } from '../../lib/romaji.js';
+
+export const getStaticPaths = () => anime.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+const { a } = Astro.props;
+---
+<Base title={`${a.zh}（${plain(a.ja)}）学日语`} desc={a.x} sysJa>
+  <header class="lesson-head">
+    <p class="crumb"><a href="/anime/">动漫</a></p>
+    <h1 lang="ja" set:html={ruby(a.ja)} />
+    <p class="ro head-ro">{romanize(a.ja)}</p>
+    <p class="sub">{a.zh}。{a.by}，{a.year}</p>
+  </header>
+  <Controls />
+  <article class="unit">
+    <p class="guide">{a.x}</p>
+    {a.line && (
+      <section class="sec">
+        <div class="sec-h"><h2 lang="ja">名台詞</h2><span>一句话学语法</span></div>
+        <button type="button" class="say-line" lang="ja" data-say={plain(a.line.ja)} set:html={ruby(a.line.ja)} />
+        <p class="ro">{romanize(a.line.ja)}</p>
+        <p class="zh">{a.line.zh}</p>
+        <p>{a.line.x}</p>
+      </section>
+    )}
+    {a.places.length > 0 && (
+      <section class="sec">
+        <div class="sec-h"><h2 lang="ja">聖地</h2><span>现实中的地方</span></div>
+        <ul class="place-list">
+          {a.places.map((p) => (
+            <li>
+              <strong lang="ja" set:html={ruby(p.n)} /> <span class="ro">{romanize(p.n)}</span>
+              <p>{p.pref}。{p.x}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+    <WordList words={topicWords(a.slug)} id={`anime-${a.slug}`}>
+      {a.ties.map(([href, label]) => <a href={href}>{label}</a>)}
+      <a href={a.src} rel="noopener">作品资料（维基百科）</a>
+    </WordList>
+  </article>
+</Base>

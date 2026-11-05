@@ -113,6 +113,7 @@ def find(word, read):
 
 # ---- glosses: open Japanese-Chinese wordlist, then Chinese Wiktionary, then JMdict (English, flagged)
 thes = json.load(open(D / "thes/final.json", encoding="utf8"))
+OWN = json.loads((ROOT / "scripts/zh-glosses.json").read_text(encoding="utf8"))  # written by hand for common words the open lists miss
 READ = re.compile(r"^[（(]([^）)]*)[）)]\s*[⓪①-⑨\d]?")
 TAG = re.compile(r"【[^】]*】|^\s*(名词|代词|副词|连体词|感叹词|接续词|动[123]|自动[123]?|他动[123]?|形容词|形容动词|イ形|ナ形)\s*")
 
@@ -167,7 +168,7 @@ for lv in LEVELS:
             continue
         seen.add(word)
         hits = find(word, read)
-        zh = thes_gloss(word, read) or wikt.get(word)
+        zh = OWN.get(word) or thes_gloss(word, read) or wikt.get(word)
         en = None if zh else jm.get((word, read)) or jm.get((read, read))
         if not zh and not en:
             continue
@@ -212,6 +213,29 @@ for g in grammar:
     out.append({"lv": g["lv"], "p": g["p"], "zh": g["zh"], "ex": [example(s) for s in picks]})
 (OUT / "grammar.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf8")
 print("grammar", len(out), "without example:", thin)
+
+# ---- scenes and anime: hand-picked word sets (scripts/topics.json), meanings and sentences found the same way
+topics, topic_words = {}, 0
+for slug, spec in json.loads((ROOT / "scripts/topics.json").read_text(encoding="utf8")).items():
+    items, used = [], set()
+    for token in spec.split():
+        word, _, read = token.partition(":")
+        read = read or word
+        zh = OWN.get(word) or thes_gloss(word, read) or wikt.get(word)
+        en = None if zh else jm.get((word, read)) or jm.get((read, read))
+        if not zh and not en:
+            print("  no gloss", slug, word)
+            continue
+        pool = [i for i in find(word, read) if i not in used and len(sents[i]["ja"]) <= 40]
+        pick = sorted(pool, key=lambda i: (sents[i]["zh"] is None, abs(len(sents[i]["ja"]) - 15)))[:2]
+        used.update(pick)
+        item = {"w": word, "ja": align(word, read), "ex": [example(sents[i]) for i in pick]}
+        item.update({"zh": zh} if zh else {"en": en})
+        items.append(item)
+    topics[slug] = items
+    topic_words += len(items)
+(OUT / "topics.json").write_text(json.dumps(topics, ensure_ascii=False, separators=(",", ":")), encoding="utf8")
+print("topics", len(topics), "words", topic_words, "no-example", sum(1 for v in topics.values() for x in v if not x["ex"]))
 
 # ---- native example sentences for the themed lessons, replacing self-written dialogues
 lesson_words = json.load(open(ROOT / "scripts/.lesson-words.json", encoding="utf8"))

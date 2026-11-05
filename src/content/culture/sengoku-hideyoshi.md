@@ -1,8 +1,8 @@
 ---
 title: 农民出身的太阁
 ja: 豊臣秀吉{とよとみひでよし}
-cat: sengoku
-order: 6
+cat: history
+order: 26
 art: hideyoshi
 summary: 从足轻到关白，秀吉用检地和刀狩重新划定了社会，也用一场赏花留下了一个时代的影子。
 sources:
