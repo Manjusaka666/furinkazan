@@ -32,7 +32,7 @@ export function merge(local, remote) {
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 export async function authCall(path, body) {
-  const res = await fetch(`${AUTH}/${path}/`, {
+  const res = await fetch(`${AUTH}/${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body ?? {}),
@@ -42,7 +42,7 @@ export async function authCall(path, body) {
 }
 
 async function session() {
-  const res = await fetch(`${AUTH}/get-session/`);
+  const res = await fetch(`${AUTH}/get-session`);
   if (!res.ok) throw new Error(`session ${res.status}`);
   const data = await res.json();
   return data?.user ? { user: data.user, jwt: res.headers.get('set-auth-jwt') } : null;
@@ -54,7 +54,7 @@ export async function sync() {
   if (!s) { setUser(null); return null; }
   setUser(s.user.email);
   const headers = { Authorization: `Bearer ${s.jwt}`, 'Content-Type': 'application/json' };
-  const res = await fetch(`${DB}/?select=done,deck,prefs`, { headers });
+  const res = await fetch(`${DB}?select=done,deck,prefs`, { headers });
   if (!res.ok) throw new Error(`pull ${res.status}`);
   const [row] = await res.json();
 
@@ -67,7 +67,7 @@ export async function sync() {
     dispatchEvent(new Event('fk:synced'));
   }
   if (!row || !same(merge(row, row), merged)) {
-    const put = await fetch(`${DB}/`, {
+    const put = await fetch(DB, {
       method: 'POST',
       headers: { ...headers, Prefer: 'resolution=merge-duplicates,return=minimal' },
       body: JSON.stringify({ user_id: s.user.id, ...merged }),

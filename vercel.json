@@ -1,6 +1,5 @@
 {
   "framework": "astro",
-  "trailingSlash": true,
   "rewrites": [
     {
       "source": "/api/auth/:path*",
