@@ -113,9 +113,9 @@ test('wiki: every topic has Japanese text, a source link and a retrieval date', 
     assert.ok(w.jaText.length > 0 && w.jaUrl.startsWith('https://ja.wikipedia.org/') && w.date, t.slug);
   }
 });
-test('audio: only native recordings, and every path exists on disk', () => {
+test('audio: every path in the manifests exists on disk', () => {
   const has = (p) => existsSync(new URL(`../public/audio/${p}`, import.meta.url));
-  for (const [k, p] of Object.entries(json('audio-words.json'))) assert.ok(p.startsWith('h/') && has(p), k);
-  for (const [k, a] of Object.entries(json('audio-sentences.json'))) assert.ok(a[0].startsWith('t/') && has(a[0]), k);
-  assert.deepEqual(readdirSync(new URL('../public/audio/', import.meta.url)).filter((d) => !d.startsWith('.')).sort(), ['h', 't']);
+  for (const [k, p] of Object.entries(json('audio-words.json'))) assert.ok(has(p), k);
+  for (const [k, a] of Object.entries(json('audio-sentences.json'))) assert.ok(has(a[0]), k);
+  for (const c of GOJUON.flatMap((r) => r.cells).filter(Boolean)) assert.ok(has(`kana/${c[0]}.aac`), c[0]);
 });

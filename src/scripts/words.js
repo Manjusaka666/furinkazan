@@ -1,4 +1,4 @@
-import { ruby, reading } from '../lib/ruby.js';
+import { ruby, plain, reading } from '../lib/ruby.js';
 import { getDeck } from '../lib/store.js';
 
 const $ = (id) => document.getElementById(id);
@@ -17,9 +17,11 @@ const el = (tag, cls, text) => {
   return n;
 };
 const speak = (ja, cls, au) => {
-  const b = el(au ? 'button' : 'span', cls);
+  const b = el('button', cls);
+  b.type = 'button';
   b.lang = 'ja';
-  if (au) { b.type = 'button'; b.dataset.au = au; }
+  b.dataset.say = plain(ja);
+  if (au) b.dataset.au = au;
   b.innerHTML = ruby(ja); // ruby() escapes its input
   return b;
 };
@@ -28,7 +30,7 @@ function row(w, inDeck) {
   const box = el('div', 'word');
   const h = el('h2', 'word-h');
   h.append(speak(w.ja, 'term', w.au), el('span', 'ro', ` ${w.ro}`));
-  if (w.au) h.append(el('span', 'voice', '母语者录音'));
+  if (w.au) h.append(el('span', 'voice', w.au.startsWith('h/') ? '母语者录音' : 'VOICEVOX 合成'));
   const g = el('p', 'gloss', `${w.g} `);
   const add = el('button', 'add', inDeck ? '已在复习中' : '加入复习');
   add.type = 'button';

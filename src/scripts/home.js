@@ -11,7 +11,7 @@ export function sekkiFor(date) {
 
 const [name, yomi, , word, gloss] = sekkiFor(new Date());
 const today = document.getElementById('today');
-today.innerHTML = `<span lang="ja"><strong>${ruby(`${name}{${yomi}}`)}</strong></span><br>当令的词：<span class="term" lang="ja">${ruby(word)}</span>。${gloss}。`;
+today.innerHTML = `<span lang="ja"><strong>${ruby(`${name}{${yomi}}`)}</strong></span><br>当令的词：<button type="button" class="term" lang="ja" data-say="${word.replace(/\{[^}]*\}/g, '')}">${ruby(word)}</button>。${gloss}。`;
 
 // Returning learners see what they have under way; nothing here imposes an order.
 const done = getDone().length;

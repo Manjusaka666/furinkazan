@@ -2,8 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { kanji, GRADES, wordsWith } from '../../data/kanji.js';
 import { gloss, auOf } from '../../data/course/index.js';
-import Say from '../../components/Say.astro';
-import Voice from '../../components/Voice.astro';
+import { ruby } from '../../lib/ruby.js';
 import { romanize } from '../../lib/romaji.js';
 import { toRomaji } from '../../lib/kana.js';
 
@@ -15,7 +14,7 @@ const grade = GRADES.find(([g]) => g === k.g)[1];
 const words = wordsWith(k.c);
 const start = (d) => d.match(/-?\d*\.?\d+/g).slice(0, 2).map(Number);
 // よ.む is stem and okurigana; the dash marks a reading used only inside compounds.
-const read = (r) => ({ stem: r.split('.')[0], oku: r.split('.')[1] ?? '', ro: toRomaji(r.replace(/[.-]/g, '')) });
+const read = (r) => ({ stem: r.split('.')[0], oku: r.split('.')[1] ?? '', say: r.replace(/[.-]/g, ''), ro: toRomaji(r.replace(/[.-]/g, '')) });
 ---
 <Base title={`${k.c}：笔顺和读音`} desc={`汉字「${k.c}」的动态笔顺（${k.d.length} 画）、音读、训读、罗马音和常用词。`} sysJa>
   <div class="page-head kanji-head">
@@ -36,7 +35,7 @@ const read = (r) => ({ stem: r.split('.')[0], oku: r.split('.')[1] ?? '', ro: to
           <ul>
             {list.map((r) => {
               const x = read(r);
-              return <li><span class="term" lang="ja">{x.stem}{x.oku && <span class="oku">{x.oku}</span>}</span> <span class="ro">{x.ro}</span></li>;
+              return <li><button type="button" class="term" lang="ja" data-say={x.say}>{x.stem}{x.oku && <span class="oku">{x.oku}</span>}</button> <span class="ro">{x.ro}</span></li>;
             })}
           </ul>
         </div>
@@ -50,8 +49,8 @@ const read = (r) => ({ stem: r.split('.')[0], oku: r.split('.')[1] ?? '', ro: to
         {words.map((w) => (
           <div class="word">
             <h3 class="word-h">
-              <Say ja={w.ja} au={auOf(w)} cls="term" />
-              <span class="ro">{romanize(w.ja)}</span><Voice au={auOf(w)} />
+              <button type="button" class="term" lang="ja" data-say={w.w} data-au={auOf(w)} set:html={ruby(w.ja)} />
+              <span class="ro">{romanize(w.ja)}</span>
             </h3>
             <p class="gloss">{gloss(w)} <button type="button" class="add" data-add={w.w}>加入复习</button></p>
           </div>

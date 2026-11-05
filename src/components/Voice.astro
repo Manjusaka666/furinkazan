@@ -1,4 +1,4 @@
 ---
 const { au } = Astro.props;
 ---
-{au && <span class="voice">母语者录音</span>}
+{au && <span class="voice">{au.startsWith('h/') ? '母语者录音' : 'VOICEVOX 合成'}</span>}

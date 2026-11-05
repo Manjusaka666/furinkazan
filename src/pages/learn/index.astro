@@ -6,14 +6,14 @@ import toc from '../../data/grammar/index.json';
 import works from '../../data/library/index.json';
 
 const count = (s) => toc.filter((t) => t.section === s).length;
-const lv = (id) => [`/words/?level=${id}`, `${LEVELS[id].name} 词汇`, `${LEVELS[id].words.length} 词，带母语者例句，部分有真人录音`];
+const lv = (id) => [`/words/?level=${id}`, `${LEVELS[id].name} 词汇`, `${LEVELS[id].words.length} 词，带母语者例句和发音`];
 const g = (slug, name, s) => [`/grammar/${slug}/`, name, `Tae Kim《日语语法指南》，${count(s)} 页，含原书练习`];
 const iro = 'https://www.irodori.jpf.go.jp';
 const reads = (levels) => works.filter((w) => levels.includes(w.lv)).length;
 const read = (...titles) => titles.map((t) => works.find((w) => w.title === t)).filter(Boolean).map((w) => [`/library/${w.slug}/`, w.title, `${w.author}，${w.lv} 左右`]);
 const MAP = {
   wind: [
-    ['/kana/', '假名表', '笔顺动画和字源'],
+    ['/kana/', '假名表', '笔顺动画、字源和发音'],
     g('writing', '日语书写系统', '日语书写系统'),
     [`${iro}/starter/pdf.html`, '『いろどり』入门（国际交流基金）', '官方教材 PDF，第 0 课起配官方录音'],
     ['https://www3.nhk.or.jp/nhkworld/lesson/zh/', 'NHK 简明日语', '中文讲解的入门广播课'],

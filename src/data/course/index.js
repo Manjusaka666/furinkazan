@@ -26,8 +26,8 @@ export const topicWords = (slug) => topics[slug] ?? [];
 export const creditOf = (id) => {
   const a = sentenceAudio[id];
   if (!a) return undefined;
-  return `录音：${a[1]}，${a[2]}`;
+  return a[0].startsWith('v/') ? 'VOICEVOX:No.7 合成' : `录音：${a[1]}，${a[2]}`;
 };
 
-/** Path under /audio/ of a word's native recording. Undefined means none. */
+/** Path under /audio/ of a word's recording: h/ a native speaker, v/ VOICEVOX. Undefined means none. */
 export const auOf = (w) => wordAudio[`${w.w}|${reading(w.ja)}`];

@@ -1,4 +1,5 @@
 import { GOJUON } from '../lib/kana.js';
+import { say } from './app.js';
 import { drawStrokes } from './strokes.js';
 
 const $ = (id) => document.getElementById(id);
@@ -30,12 +31,16 @@ function open(c) {
   dialog.querySelector('.k-info div:last-child').hidden = !(here ? hs : ks);
   dialog.showModal();
   draw(char);
+  say(char, `kana/${roma}.aac`);
 }
 
 document.addEventListener('click', (e) => {
   const cell = e.target.closest('[data-kana]');
   if (cell) return open(JSON.parse(cell.dataset.kana));
+  const yoon = e.target.closest('[data-say-kana]');
+  if (yoon) say(yoon.dataset.sayKana, yoon.dataset.au);
 });
+$('k-say').addEventListener('click', () => say(current[col()], `kana/${current[0]}.aac`));
 $('k-again').addEventListener('click', () => draw(current[col()]));
 $('k-close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
@@ -62,6 +67,7 @@ function ask() {
       if (!ok) b.dataset.state = 'wrong';
       else right += 1;
       $('t-score').textContent = `答对 ${right} 题`;
+      say(target[col()], `kana/${target[0]}.aac`);
       setTimeout(ask, ok ? 800 : 1800);
     });
     return b;

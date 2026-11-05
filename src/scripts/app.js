@@ -1,6 +1,12 @@
 import { addCards } from '../lib/srs.js';
 import { getDeck, setDeck, getDone, setDone, getPrefs, setPrefs } from '../lib/store.js';
 
+// Device voice is the fallback when no recording exists: quality varies by device and it is synthetic.
+const synth = window.speechSynthesis;
+let voice;
+const pickVoice = () => { voice = synth.getVoices().find((v) => v.lang.replace('_', '-').startsWith('ja')); };
+if (synth) { pickVoice(); synth.addEventListener?.('voiceschanged', pickVoice); }
+
 const toast = (text) => {
   const el = document.getElementById('toast');
   el.textContent = text;
@@ -8,12 +14,26 @@ const toast = (text) => {
   toast.t = setTimeout(() => { el.textContent = ''; }, 5000);
 };
 
+function speak(text) {
+  if (!synth) return toast('这个浏览器不支持朗读，这句也没有真人录音。');
+  if (!voice && synth.getVoices().length) return toast('这句没有真人录音，这台设备也没有日语语音。可在系统设置里添加。');
+  if (!speak.told) { toast('这句没有真人录音，现在是设备的合成语音。'); speak.told = true; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ja-JP';
+  u.rate = 0.85;
+  if (voice) u.voice = voice;
+  synth.cancel();
+  synth.speak(u);
+}
+
 let player;
-/** Plays the native recording at /audio/<au>. */
-export function say(au) {
+/** Plays the recording at /audio/<au> when there is one, otherwise the device's own Japanese voice. */
+export function say(text, au) {
+  synth?.cancel();
   player?.pause();
+  if (!au) return speak(text);
   player = new Audio(`/audio/${au}`);
-  player.play().catch((e) => { if (e.name !== 'AbortError') toast('录音没有加载成功，检查网络后再试。'); });
+  player.play().catch((e) => { if (e.name !== 'AbortError') speak(text); });
 }
 
 const addOne = (btn) => {
@@ -31,8 +51,11 @@ const finish = (btn) => {
 };
 
 document.addEventListener('click', (e) => {
-  const sayer = e.target.closest('[data-au]');
-  if (sayer) return say(sayer.dataset.au);
+  const sayer = e.target.closest('[data-say]');
+  if (sayer) {
+    if (sayer.tagName === 'A') e.preventDefault();
+    return say(sayer.dataset.say, sayer.dataset.au);
+  }
   const done = e.target.closest('[data-finish]');
   if (done) finish(done);
   const add = e.target.closest('[data-add]');

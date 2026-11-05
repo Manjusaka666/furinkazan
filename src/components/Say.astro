@@ -1,7 +1,0 @@
----
-import { ruby } from '../lib/ruby.js';
-
-// Only text with a recording is a button: there is no synthetic voice to fall back to.
-const { ja, au, cls } = Astro.props;
----
-{au ? <button type="button" class={cls} lang="ja" data-au={au} set:html={ruby(ja)} /> : <span class={cls} lang="ja" set:html={ruby(ja)} />}

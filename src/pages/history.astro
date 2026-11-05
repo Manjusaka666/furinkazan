@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { eras, EVENTS } from '../data/eras.js';
 import { wiki } from '../data/wiki.js';
-import { ruby } from '../lib/ruby.js';
+import { ruby, plain } from '../lib/ruby.js';
 import { romanize } from '../lib/romaji.js';
 import works from '../data/library/index.json';
 
@@ -16,7 +16,7 @@ const title = (slug) => works.find((w) => w.slug === slug)?.title;
   <ol class="era-list">
     {eras.map((e) => (
       <li>
-        <span class="era-name brush" lang="ja" set:html={ruby(e.ja)} />
+        <button type="button" class="term era-name brush" lang="ja" style="border:0" data-say={plain(e.ja)} set:html={ruby(e.ja)} />
         <div>
           <p class="ro">{romanize(e.ja)}</p>
           <span class="era-span">{e.span}</span>
