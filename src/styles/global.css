@@ -310,8 +310,6 @@ dialog::backdrop { background: rgb(46 44 37 / .4); }
 .trainer select { font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--line); padding: .15rem .4rem; }
 .trainer-opts { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: .92rem; margin-bottom: .9rem; align-items: center; }
 
-/* Account */
-
 /* Review */
 .review { max-width: 34rem; padding: 0 var(--gap); }
 .stats { display: flex; gap: 2.2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
