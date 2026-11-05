@@ -16,19 +16,21 @@ const el = (tag, cls, text) => {
   if (text !== undefined) n.textContent = text;
   return n;
 };
-const speak = (ja, cls) => {
+const speak = (ja, cls, au) => {
   const b = el('button', cls);
   b.type = 'button';
   b.lang = 'ja';
   b.dataset.say = plain(ja);
+  if (au) b.dataset.au = au;
   b.innerHTML = ruby(ja); // ruby() escapes its input
   return b;
 };
 
 function row(w, inDeck) {
   const box = el('div', 'word');
-  const h = el('h3', 'word-h');
-  h.append(speak(w.ja, 'term'), el('span', 'ro', ` ${w.ro}`));
+  const h = el('h2', 'word-h');
+  h.append(speak(w.ja, 'term', w.au), el('span', 'ro', ` ${w.ro}`));
+  if (w.au) h.append(el('span', 'voice', w.au.startsWith('h/') ? '母语者录音' : 'VOICEVOX 合成'));
   const g = el('p', 'gloss', `${w.g} `);
   const add = el('button', 'add', inDeck ? '已在复习中' : '加入复习');
   add.type = 'button';
@@ -40,13 +42,13 @@ function row(w, inDeck) {
     const d = el('details');
     d.append(el('summary', '', `例句 ${w.ex.length}`));
     for (const e of w.ex) {
-      d.append(speak(e.ja, 'say-line'), el('p', 'ro', e.ro));
+      d.append(speak(e.ja, 'say-line', e.au), el('p', 'ro', e.ro));
       if (e.zh) d.append(el('p', 'zh', e.zh));
       const src = el('p', 'ex-src');
       const a = el('a', '', `Tatoeba #${e.id}`);
       a.href = `https://tatoeba.org/sentences/show/${e.id}`;
       a.rel = 'noopener';
-      src.append(a, `，${e.by}`);
+      src.append(a, `，${e.by}`, e.credit ? `。${e.credit}` : '');
       d.append(src);
     }
     box.append(d);

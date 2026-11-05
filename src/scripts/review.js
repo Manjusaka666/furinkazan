@@ -50,7 +50,7 @@ function show(id) {
   front.textContent = id;
   const row = el('div', 'row');
   row.append(
-    btn('听发音', 'btn ghost', () => say(id)),
+    btn('听发音', 'btn ghost', () => say(id, w.au)),
     btn('看答案', 'btn', () => {
       front.innerHTML = ruby(w.ja);
       const back = el('p', 'back', `${w.zh}（${w.n}）`);
@@ -64,7 +64,7 @@ function show(id) {
       };
       rate.append(btn('忘了', 'btn ghost', mark(false)), btn('记得', 'btn', mark(true)));
       card.replaceChildren(front, ro, back, rate);
-      say(id);
+      say(id, w.au);
     }),
   );
   card.replaceChildren(front, row);

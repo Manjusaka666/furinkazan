@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { kanji, GRADES, wordsWith } from '../../data/kanji.js';
-import { gloss } from '../../data/course/index.js';
+import { gloss, auOf } from '../../data/course/index.js';
 import { ruby } from '../../lib/ruby.js';
 import { romanize } from '../../lib/romaji.js';
 import { toRomaji } from '../../lib/kana.js';
@@ -49,7 +49,7 @@ const read = (r) => ({ stem: r.split('.')[0], oku: r.split('.')[1] ?? '', say: r
         {words.map((w) => (
           <div class="word">
             <h3 class="word-h">
-              <button type="button" class="term" lang="ja" data-say={w.w} set:html={ruby(w.ja)} />
+              <button type="button" class="term" lang="ja" data-say={w.w} data-au={auOf(w)} set:html={ruby(w.ja)} />
               <span class="ro">{romanize(w.ja)}</span>
             </h3>
             <p class="gloss">{gloss(w)} <button type="button" class="add" data-add={w.w}>加入复习</button></p>

@@ -1,0 +1,9 @@
+---
+const { img, alt, eager = false } = Astro.props;
+---
+{img && (
+  <figure class="wk-img">
+    <img src={img.src} width={img.w} height={img.h} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    <figcaption>{img.by && `${img.by}，`}{img.lic}，<a href={img.page} rel="noopener">Wikimedia Commons</a></figcaption>
+  </figure>
+)}

@@ -5,12 +5,13 @@ Usage: python3 -I scripts/fetch-library.py CACHE_DIR
 Aozora marks works public domain under Japanese law. We also require the author to have died by CUTOFF, so the
 text is free under life+70 terms too (Switzerland, the EU), where this site's reader lives.
 """
-import csv, io, json, pathlib, re, sys, urllib.request, zipfile
+import csv, io, json, pathlib, re, sys, time, urllib.request, zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CACHE = pathlib.Path(sys.argv[1])
 OUT = ROOT / "src/data/library"
 CUTOFF = 1955
+ANCIENT = {"作者不詳", "紫式部", "菅原孝標女"}  # the catalog has no death date for these
 MAX_CHARS = 200_000  # beyond this a single static page is too heavy; link out instead
 CATALOG_URL = "https://www.aozora.gr.jp/index_pages/list_person_all_extended_utf8.zip"
 
@@ -48,7 +49,8 @@ def body_of(text):
     # ｜base《ruby》 and kanji-run《ruby》 become the site's base{ruby}; ruby on kana bases is dropped, ruby.js only marks kanji.
     def rb(m):
         base, read = m.group(1) or m.group(2), m.group(3)
-        return f"{base}{{{read}}}" if re.fullmatch(r"[㐀-鿿豈-﫿々〆ヶ〇]+", base) else base
+        # A ｜ starts the base inside a kanji run; a zero-width space keeps that boundary, since {} alone would claim the whole run.
+        return f'{chr(0x200b) if m.group(1) else ""}{base}{{{read}}}' if re.fullmatch(r"[㐀-鿿豈-﫿々〆ヶ〇]+", base) else base
     body = re.sub(r"(?:｜([^《\n]+)|([㐀-鿿豈-﫿々〆ヶ〇]+))《([^》\n]+)》", rb, body)
     body = re.sub(r"《[^》\n]*》", "", body)
     body = body.replace("｜", "")
@@ -58,6 +60,7 @@ def body_of(text):
 def fetch(url, name):
     path = CACHE / name
     if not path.exists():
+        time.sleep(0.5)  # Aozora is run by volunteers
         with urllib.request.urlopen(url) as r:
             path.write_bytes(r.read())
     return path
@@ -77,14 +80,18 @@ for w in manifest:
     entries = by_id.get(w["id"])
     assert entries, f'{w["slug"]}: id {w["id"]} not in catalog'
     r = entries[0]
-    assert r["作品著作権フラグ"] == "なし", w["slug"]
+    if any(e["作品著作権フラグ"] != "なし" for e in entries):
+        skipped.append((w["slug"], "in copyright"))
+        continue
     people = [(e["姓"] + e["名"], e["役割フラグ"], e["没年月日"][:4]) for e in entries]
-    late = [name for name, _, died in people if name != "作者不詳" and (not died or int(died) > CUTOFF)]
+    late = [name for name, _, died in people if name not in ANCIENT and (not died or int(re.match(r"\d+", died)[0]) > CUTOFF)]
     if late:  # usually a translator who lived longer than the author
         skipped.append((w["slug"], f"life+70: {late}"))
         continue
     url = r["テキストファイルURL"]
-    assert url.endswith(".zip"), w["slug"]
+    if not url.endswith(".zip"):  # published without a text file
+        skipped.append((w["slug"], "no text file"))
+        continue
     with zipfile.ZipFile(fetch(url, f'{w["id"]}.zip')) as z:
         txt = next(n for n in z.namelist() if n.lower().endswith(".txt"))
         raw = z.read(txt).decode("shift_jis_2004", errors="replace")
@@ -93,11 +100,13 @@ for w in manifest:
     if chars > MAX_CHARS:
         skipped.append((w["slug"], chars))
         continue
-    assert chars > 200, f'{w["slug"]}: parsed only {chars} chars'
+    if chars < 200:  # a very short poem, or a work published as images
+        skipped.append((w["slug"], chars))
+        continue
     author = next(n for n, role, _ in people if role == "著者")
     translator = next((n for n, role, _ in people if role == "翻訳者"), None)
     meta = {
-        "slug": w["slug"], "lv": w["lv"], "cat": w["cat"], "zh": w["zh"], "chars": chars,
+        "slug": w["slug"], "lv": w["lv"], "cat": w["cat"], "chars": chars,
         "title": r["作品名"], "subtitle": r["副題"], "kana": r["文字遣い種別"], "author": author, "translator": translator,
         "card": r["図書カードURL"], "base": f'{r["底本名1"]}（{r["底本出版社名1"]}）',
         "input": r["入力者"], "proof": r["校正者"],

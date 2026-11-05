@@ -8,13 +8,13 @@ const { title, desc, stage, home = false, sysJa = false } = Astro.props;
 const fullTitle = home ? title : `${title} | 風林火山`;
 const path = Astro.url.pathname;
 const nav = [
+  ['/learn/', '路线'],
   ['/kana/', '假名'],
-  ['/learn/', '课程'],
+  ['/grammar/', '语法'],
   ['/scenes/', '情景'],
   ['/anime/', '动漫'],
   ['/words/', '词汇'],
   ['/kanji/', '汉字'],
-  ['/grammar/', '语法'],
   ['/library/', '文库'],
   ['/culture/', '文化'],
   ['/review/', '复习'],
@@ -51,7 +51,7 @@ const rules = JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eage
     </header>
     <main id="main"><slot /></main>
     <footer class="foot">
-      <p>例句来自 Tatoeba，读物来自青空文库，都是母语者写的公开文本；中文讲解和练习题由本站编写，未经母语教师审校。罗马音由程序生成，以假名为准。不用注册，进度只保存在这个浏览器里。</p>
+      <p>语法和练习来自 Tae Kim《日语语法指南》中文版，例句来自 Tatoeba 的母语者，读物来自青空文库，文化条目来自维基百科，均按各自的授权使用。个人学习项目，非商业。罗马音由程序生成，以假名为准。不用注册，进度只保存在这个浏览器里。</p>
       <p><a href="/history/">日本史年表</a>　<a href="/sources/">资料来源与致谢</a></p>
     </footer>
     <div class="toast" role="status" aria-live="polite" id="toast"></div>

@@ -1,5 +1,5 @@
 // Authoring syntax: 日本語{にほんご} is a kanji run with its reading; [[...]] marks an inline Japanese term.
-const RUBY = /([㐀-鿿豈-﫿々〆ヶ]+)\{([^}]+)\}/g;
+const RUBY = /([㐀-鿿豈-﫿々〆ヶ〇]+)\{([^}]+)\}/g;
 
 const escapeHtml = (s) =>
   s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);

@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import { GOJUON, DAKUON, YOON } from '../lib/kana.js';
 
 ---
-<Base title="假名表" desc="平假名与片假名全表：点一下听发音、看笔顺动画和字源，再用四选一练习巩固。" stage="wind">
+<Base title="假名表" desc="平假名与片假名全表：点一下听发音、看笔顺动画和字源，再用假名认读卡片巩固。" stage="wind">
   <div class="page-head">
     <h1>假名表</h1>
     <p>点任意一格，可以听发音、看笔顺和它从哪个汉字变来。按自己的节奏来，可以一行一行地学，也可以一口气看完。</p>
@@ -45,13 +45,13 @@ import { GOJUON, DAKUON, YOON } from '../lib/kana.js';
     <h2 lang="ja">拗音</h2>
     <div class="yoon">
       {YOON.map((c) => (
-        <button type="button" class="kcell" data-say-kana={c[1]}>
+        <button type="button" class="kcell" data-say-kana={c[1]} data-au={`kana/${c[0]}.aac`}>
           <span class="hira" lang="ja">{c[1]}</span><span class="kata" lang="ja">{c[2]}</span><small>{c[0]}</small>
         </button>
       ))}
     </div>
 
-    <h2 id="practice">練習</h2>
+    <h2 id="practice">認読カード</h2>
     <div class="trainer" id="trainer">
       <div class="trainer-opts">
         <label>练习范围

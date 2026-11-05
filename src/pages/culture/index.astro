@@ -1,23 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { CATS } from '../../data/eras.js';
+import { topics } from '../../data/wiki.js';
 import { ruby } from '../../lib/ruby.js';
-
-const essays = (await getCollection('culture')).sort((a, b) => a.data.order - b.data.order);
 ---
-<Base title="文化" desc={`日本的历史、文学、美学、饮食，中日之间的往来和战国史：${essays.length} 篇标明出处的短文。`} stage="culture">
+<Base title="文化" desc={`日本的历史、文学、美学、传统、饮食和中日往来：${topics.length} 个主题，日文和中文都节选自维基百科，并注明出处。`} stage="culture" sysJa>
   <div class="page-head">
     <h1>文化</h1>
-    <p>{essays.length} 篇短文，每篇都列出参考来源，由本站用中文编写，引用的原文标明出处。文中的日语词点一下就能听。想按时间看，请到<a href="/history/">年表</a>。</p>
+    <p>{topics.length} 个主题，每页节选日语和中文维基百科，带假名和罗马音。这些页面没有本站自己写的内容。按时间看请到<a href="/history/">年表</a>。</p>
   </div>
   {Object.entries(CATS).map(([key, c]) => (
     <section class="cat-block" id={key}>
       <h2><span lang="ja" style="margin:0;font-size:inherit;color:inherit" set:html={ruby(c.ja)} /><span>{c.zh}</span></h2>
-      {essays.filter((e) => e.data.cat === key).map((e) => (
-        <a class="essay-link" href={`/culture/${e.id}/`}>
-          <strong>{e.data.title}</strong>
-          <span>{e.data.summary}</span>
+      {topics.filter((w) => w.cat === key).map((w) => (
+        <a class="essay-link" href={`/culture/${w.slug}/`}>
+          <strong lang="ja">{w.ja}{w.zh && w.zh !== w.ja && <small> {w.zh}</small>}</strong>
+          <span>{w.summary}</span>
         </a>
       ))}
     </section>

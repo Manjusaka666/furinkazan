@@ -1,12 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ruby, plain, reading } from '../src/lib/ruby.js';
-import { term, rich } from '../src/lib/term.js';
 import { romanize } from '../src/lib/romaji.js';
 import { toRomaji, GOJUON } from '../src/lib/kana.js';
 import { addCards, grade, dueIds, INTERVALS } from '../src/lib/srs.js';
-import { lessons, STAGES } from '../src/data/lessons/index.js';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 
 const json = (p) => JSON.parse(readFileSync(new URL(`../src/data/${p}`, import.meta.url), 'utf8'));
 
@@ -17,10 +15,6 @@ test('ruby wraps only the kanji run', () => {
 test('plain and reading', () => {
   assert.equal(plain('日本語{にほんご}です'), '日本語です');
   assert.equal(reading('日本語{にほんご}です'), 'にほんごです');
-});
-test('term carries speech text; rich replaces markers', () => {
-  assert.match(term('侘{わ}び'), /data-say="侘び"/);
-  assert.match(rich('这是[[茶{ちゃ}]]。'), /^这是<button type="button" class="term"/);
 });
 test('romaji handles digraphs, geminates, long vowels', () => {
   assert.equal(toRomaji('きょうと'), 'kyouto');
@@ -63,23 +57,6 @@ test('srs: dueIds returns only due cards, oldest first', () => {
   assert.deepEqual(dueIds({ a: { box: 0, due: 5 }, b: { box: 0, due: 1 }, c: { box: 0, due: 9 } }, 5), ['b', 'a']);
 });
 
-test('lesson data is consistent', () => {
-  const slugs = new Set();
-  for (const l of lessons) {
-    assert.ok(!slugs.has(l.slug), `dup slug ${l.slug}`);
-    slugs.add(l.slug);
-    assert.ok(STAGES[l.stage], l.slug);
-    assert.ok(l.vocab.length >= 4, `${l.slug} vocab`);
-    assert.ok(l.quiz.length >= 2, `${l.slug} quiz`);
-    for (const q of l.quiz) assert.ok(q.c >= 0 && q.c < q.o.length, `${l.slug}: ${q.q}`);
-    for (const [ja] of [...l.vocab, ...(l.dialog ?? []).map((d) => [d[1]])]) {
-      // Every kanji must carry a reading: a beginner cannot read a bare one.
-      const bare = ja.replace(/[㐀-鿿々]+\{[^}]+\}/g, '');
-      assert.ok(!/[㐀-鿿]/.test(bare), `${l.slug}: unread kanji in ${ja}`);
-    }
-  }
-});
-
 test('course data: every word has a meaning, every example credits its author', () => {
   const seen = new Set();
   for (const lv of ['n5', 'n4', 'n3', 'n2', 'n1']) {
@@ -90,7 +67,6 @@ test('course data: every word has a meaning, every example credits its author', 
       for (const e of w.ex) assert.ok(e.id && e.by, w.w);
     }
   }
-  for (const g of json('course/grammar.json')) for (const e of g.ex) assert.ok(e.id && e.by, g.p);
 });
 test('library: index matches files, no leftover Aozora markup', () => {
   const works = json('library/index.json');
@@ -120,4 +96,26 @@ test('kanji: the whole jōyō list, each with stroke paths and at least one read
     assert.ok(k.d.length > 0, k.c);
     assert.ok(k.on.length + k.kun.length > 0, k.c);
   }
+});
+
+test('grammar: every page is imported and credits nothing to this site', () => {
+  const toc = json('grammar/index.json');
+  assert.equal(toc.length, 70);
+  for (const t of toc) {
+    const g = json(`grammar/${t.slug}.json`);
+    assert.ok(g.html.length > 100 && g.orig, t.slug);
+    assert.ok(!/onclick|<script|<iframe/i.test(g.html), `${t.slug}: live markup from the source`);
+  }
+});
+test('wiki: every topic has Japanese text, a source link and a retrieval date', () => {
+  for (const t of json('wiki/index.json')) {
+    const w = json(`wiki/${t.slug}.json`);
+    assert.ok(w.jaText.length > 0 && w.jaUrl.startsWith('https://ja.wikipedia.org/') && w.date, t.slug);
+  }
+});
+test('audio: every path in the manifests exists on disk', () => {
+  const has = (p) => existsSync(new URL(`../public/audio/${p}`, import.meta.url));
+  for (const [k, p] of Object.entries(json('audio-words.json'))) assert.ok(has(p), k);
+  for (const [k, a] of Object.entries(json('audio-sentences.json'))) assert.ok(has(a[0]), k);
+  for (const c of GOJUON.flatMap((r) => r.cells).filter(Boolean)) assert.ok(has(`kana/${c[0]}.aac`), c[0]);
 });

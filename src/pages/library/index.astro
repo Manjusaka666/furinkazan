@@ -4,16 +4,16 @@ import Enso from '../../components/Enso.astro';
 import works from '../../data/library/index.json';
 
 const GROUPS = [
-  ['tale', '民间故事', '句子短，重复多，第一次读整篇日语从这里开始。'],
-  ['child', '童话与短篇', '日本孩子在语文课上读的作品。'],
-  ['food', '饮食', '寿司、水果、咖啡和泥鳅店，日本作家写吃的。'],
-  ['kaidan', '怪谈与妖怪', '雪女、无耳芳一和牡丹灯笼。'],
-  ['china', '中国题材', '日本作家写的唐传奇、『论语』和『汉书』，可以和中文原典对读。'],
-  ['sengoku', '历史与时代小说', '菊池宽的合战谭叙述清楚，坂口安吾和幸田露伴更难也更有个性。'],
-  ['modern', '近代小说', '芥川、漱石、太宰、鸥外和一叶。'],
-  ['poem', '诗与短歌', ''],
-  ['classic', '古典原文', '要读懂需要一点古文知识，罗马音只是按现代读法注的。'],
-  ['essay', '随笔与评论', ''],
+  ['tale', '民间故事'],
+  ['child', '童话与短篇'],
+  ['food', '写饮食的作品'],
+  ['kaidan', '怪谈与妖怪'],
+  ['china', '中国题材'],
+  ['sengoku', '历史与时代小说'],
+  ['modern', '近代小说'],
+  ['poem', '诗与短歌'],
+  ['classic', '古典原文'],
+  ['essay', '随笔与评论'],
 ];
 const LINK_ONLY = [
   ['谷崎潤一郎', 1383], ['吉川英治', 1562], ['北大路魯山人', 1403], ['小川未明', 1475], ['佐藤春夫', 1763],
@@ -21,22 +21,21 @@ const LINK_ONLY = [
 const rank = (w) => [w.lv.slice(1) * -1, w.chars];
 const byLevel = (a, b) => rank(a)[0] - rank(b)[0] || rank(a)[1] - rank(b)[1];
 ---
-<Base title="文库" desc={`${works.length} 部公版日语原文，按难度排列，带作品导读。`} sysJa>
+<Base title="文库" desc={`${works.length} 部公版日语原文，按难度排列，全文来自青空文库，带罗马音。`} sysJa>
   <div class="page-head">
     <h1>文库</h1>
-    <p>{works.length} 部日本作家的原文，全文来自青空文库。同一组里容易的排在前面，难度标记是本站的估计。这里的书会继续增加。听书可以去<a href="https://aozoraroudoku.jp/" rel="noopener">青空朗读</a>，更简单的分级读物可以去<a href="https://tadoku.org/japanese/" rel="noopener">NPO 多读</a>。</p>
+    <p>{works.length} 部日本作家的原文，全文来自青空文库。这些作品都写于 1955 年以前，读来是文学，不是今天的口语：学现在怎么说话，请看词汇页的例句和 <a href="https://news.web.nhk/news/easy/" rel="noopener">NEWS WEB EASY</a>。同一组里容易的排在前面，难度标记是本站的估计。听书可以去<a href="https://aozoraroudoku.jp/" rel="noopener">青空朗读</a>，从入门开始的分级读物可以去 <a href="https://tadoku.org/japanese/free-books/" rel="noopener">NPO 多言語多読的免费读物</a>。</p>
   </div>
-  {GROUPS.map(([cat, name, note]) => (
+  {GROUPS.map(([cat, name]) => (
     <section class="stage-block" id={cat}>
       <h2>{name}</h2>
-      {note && <p class="stage-note">{note}</p>}
       <ol class="lesson-list">
-        {works.filter((w) => w.cat === cat).sort(byLevel).map((w) => (
+        {works.filter((w) => w.cat === cat).sort(cat === 'classic' ? (a, b) => a.slug.localeCompare(b.slug) : byLevel).map((w) => (
           <li>
             <a href={`/library/${w.slug}/`} data-lesson={`read-${w.slug}`}>
               <Enso />
               <span class="l-n">{w.lv}</span>
-              <span class="l-title"><span lang="ja">{w.title}　{w.author}</span><span class="l-zh">{w.zh}</span></span>
+              <span class="l-title"><span lang="ja">{w.title}{w.subtitle && `　${w.subtitle}`}　{w.author}{w.translator && `（${w.translator} 訳）`}</span><span class="l-zh">约 {Math.round(w.chars / 100) / 10} 千字</span></span>
             </a>
           </li>
         ))}
@@ -45,7 +44,7 @@ const byLevel = (a, b) => rank(a)[0] - rank(b)[0] || rank(a)[1] - rank(b)[1];
   ))}
   <section class="stage-block">
     <h2>只放链接的作家</h2>
-    <p class="stage-note">这些作家在日本已经进入公有领域，但去世不满七十年，在瑞士和欧盟仍受保护，所以本站不转载全文，请到青空文库阅读。吉川英治写过『新書太閤記』和『三国志』。</p>
+    <p class="stage-note">这些作家在日本已经进入公有领域，但去世不满七十年，在瑞士和欧盟仍受保护，所以本站不转载全文，请到青空文库阅读。</p>
     <ul>
       {LINK_ONLY.map(([name, id]) => <li><a lang="ja" href={`https://www.aozora.gr.jp/index_pages/person${id}.html`} rel="noopener">{name}</a></li>)}
     </ul>

@@ -2,15 +2,20 @@
 import Base from '../../layouts/Base.astro';
 import Controls from '../../components/Controls.astro';
 import WordList from '../../components/WordList.astro';
+import WikiText from '../../components/WikiText.astro';
 import { anime } from '../../data/anime.js';
+import { wiki } from '../../data/wiki.js';
+import { STILLS } from '../../data/stills.js';
 import { topicWords } from '../../data/course/index.js';
 import { ruby, plain } from '../../lib/ruby.js';
 import { romanize } from '../../lib/romaji.js';
 
 export const getStaticPaths = () => anime.map((a) => ({ params: { slug: a.slug }, props: { a } }));
 const { a } = Astro.props;
+const w = wiki[`anime-${a.slug}`];
+const stills = STILLS[a.slug];
 ---
-<Base title={`${a.zh}（${plain(a.ja)}）学日语`} desc={a.x} sysJa>
+<Base title={`${a.zh}（${plain(a.ja)}）`} desc={`${a.zh}的相关日语词汇、母语者例句和维基百科介绍。`} sysJa>
   <header class="lesson-head">
     <p class="crumb"><a href="/anime/">动漫</a></p>
     <h1 lang="ja" set:html={ruby(a.ja)} />
@@ -19,32 +24,15 @@ const { a } = Astro.props;
   </header>
   <Controls />
   <article class="unit">
-    <p class="guide">{a.x}</p>
-    {a.line && (
-      <section class="sec">
-        <div class="sec-h"><h2 lang="ja">名台詞</h2><span>一句话学语法</span></div>
-        <button type="button" class="say-line" lang="ja" data-say={plain(a.line.ja)} set:html={ruby(a.line.ja)} />
-        <p class="ro">{romanize(a.line.ja)}</p>
-        <p class="zh">{a.line.zh}</p>
-        <p>{a.line.x}</p>
+    {stills && (
+      <section class="sec stills">
+        {stills.files.map((f, i) => <img src={f} alt={`${a.zh} 官方剧照 ${i + 1}`} width="960" height="520" loading="lazy" decoding="async" />)}
+        <p class="credit">官方剧照 © Studio Ghibli。吉卜力在<a href="https://www.ghibli.jp/info/013344/" rel="noopener">官网</a>提供这些图片并请大家在常识范围内自由使用，<a href={stills.page} rel="noopener">更多剧照</a>。</p>
       </section>
     )}
-    {a.places.length > 0 && (
-      <section class="sec">
-        <div class="sec-h"><h2 lang="ja">聖地</h2><span>现实中的地方</span></div>
-        <ul class="place-list">
-          {a.places.map((p) => (
-            <li>
-              <strong lang="ja" set:html={ruby(p.n)} /> <span class="ro">{romanize(p.n)}</span>
-              <p>{p.pref}。{p.x}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
+    {w && <section class="sec"><WikiText w={w} /></section>}
     <WordList words={topicWords(a.slug)} id={`anime-${a.slug}`}>
       {a.ties.map(([href, label]) => <a href={href}>{label}</a>)}
-      <a href={a.src} rel="noopener">作品资料（维基百科）</a>
     </WordList>
   </article>
 </Base>

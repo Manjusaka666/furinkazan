@@ -12,7 +12,7 @@ export const getStaticPaths = () => scenes.map((s) => ({ params: { slug: s.slug 
 const { s } = Astro.props;
 const related = anime.filter((a) => a.ties?.some(([href]) => href === `/scenes/${s.slug}/`));
 ---
-<Base title={`${plain(s.ja)}：${s.zh}`} desc={s.x} sysJa>
+<Base title={`${plain(s.ja)}：${s.zh}`} desc={`${s.zh}场景的日语词汇和母语者例句。`} sysJa>
   <header class="lesson-head">
     <p class="crumb"><a href="/scenes/">情景</a></p>
     <h1 lang="ja" set:html={ruby(s.ja)} />
@@ -21,9 +21,8 @@ const related = anime.filter((a) => a.ties?.some(([href]) => href === `/scenes/$
   </header>
   <Controls />
   <article class="unit">
-    <p class="guide">{s.x}</p>
     <WordList words={topicWords(s.slug)} id={`scene-${s.slug}`}>
-      <a href={`/culture/${s.to}/`}>相关文化短文</a>
+      <a href={`/culture/${s.to}/`}>相关文化条目</a>
       {related.map((a) => <a href={`/anime/${a.slug}/`}>动漫：{a.zh}</a>)}
       <a href="/scenes/">其他情景</a>
     </WordList>

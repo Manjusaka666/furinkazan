@@ -1,14 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Enso from '../../components/Enso.astro';
-import { ANIME_GROUPS, PLACES, anime } from '../../data/anime.js';
+import { ANIME_GROUPS, anime } from '../../data/anime.js';
 import { ruby } from '../../lib/ruby.js';
 import { romanize } from '../../lib/romaji.js';
 ---
-<Base title="动漫" desc={`通过 ${anime.length} 部日本动漫学日语：角色的说话方式、名台词的语法、作品里的词，还有可以去走一走的圣地。`} sysJa>
+<Base title="动漫" desc={`${anime.length} 部日本动漫的相关词汇、母语者例句和维基百科介绍。`} sysJa>
   <div class="page-head">
     <h1>动漫</h1>
-    <p>看过哪部就从哪部开始：角色怎么说话，名台词的语法，作品里常见的词，还有作品连着的历史、文学和现实中的地方。本站不放动画画面和字幕，作品请到正版平台观看。</p>
+    <p>看过哪部就从哪部开始。每部有作品相关的词、母语者例句和维基百科的介绍。除吉卜力官方开放的剧照外，本站不放动画画面、字幕和台词，作品请到正版平台观看。<a href="https://animetourism88.com/" rel="noopener">动漫旅游协会的「日本动漫圣地 88」</a>可以查现实中的取景地。</p>
   </div>
   {ANIME_GROUPS.map(([name, list]) => (
     <section class="stage-block">
@@ -25,16 +25,4 @@ import { romanize } from '../../lib/romaji.js';
       </ul>
     </section>
   ))}
-  <section class="stage-block" id="places">
-    <h2>更多圣地</h2>
-    <p class="stage-note">「聖地巡礼」是去动漫的取景地走走。各作品页里还有对应的地点，也可以看<a href="https://animetourism88.com/" rel="noopener">动漫旅游协会的「日本动漫圣地 88」</a>。</p>
-    <ul class="place-list">
-      {PLACES.map((p) => (
-        <li>
-          <strong lang="ja" set:html={ruby(p.n)} /> <span class="ro">{romanize(p.n)}</span>
-          <p>{p.pref}。{p.work}。{p.x}</p>
-        </li>
-      ))}
-    </ul>
-  </section>
 </Base>

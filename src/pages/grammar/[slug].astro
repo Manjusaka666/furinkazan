@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import Controls from '../../components/Controls.astro';
+import toc from '../../data/grammar/index.json';
+
+export const getStaticPaths = () => {
+  const list = Object.entries(import.meta.glob('../../data/grammar/*.json', { eager: true })).filter(([p]) => !p.endsWith('index.json'));
+  return list.map(([, m]) => ({ params: { slug: m.default.slug }, props: { g: m.default } }));
+};
+const { g } = Astro.props;
+const i = toc.findIndex((t) => t.slug === g.slug);
+const prev = toc[i - 1];
+const next = toc[i + 1];
+---
+<Base title={`${g.title}：日语语法指南`} desc={`Tae Kim《日语语法指南》中文版：${g.title}。`} sysJa>
+  <header class="lesson-head">
+    <p class="crumb"><a href="/grammar/">日语语法指南</a>　{g.section}</p>
+    <h1>{g.title}</h1>
+    <p class="sub">作者 Tae Kim，中文翻译 pizzamx</p>
+  </header>
+  <Controls zh={false} />
+  <article class="gx" set:html={g.html} />
+  <nav class="gx-nav" aria-label="上一页和下一页">
+    {prev ? <a href={`/grammar/${prev.slug}/`}>上一页：{prev.title}</a> : <span></span>}
+    {next && <a href={`/grammar/${next.slug}/`}>下一页：{next.title}</a>}
+  </nav>
+  <p class="credit gx-credit">
+    原文 <a href={g.orig} rel="noopener">Tae Kim's Guide to Learning Japanese</a>，译文 <a href="https://github.com/pizzamx/jpgramma" rel="noopener">pizzamx/jpgramma</a>，<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/us/deed.zh-hans" rel="noopener">CC BY-NC-SA 3.0 US</a>。本站未改动讲解和练习的文字，改动的是：换成本站样式，把视频换成链接，把作者给的读音排成假名注音，并由程序加上罗马音（可能有误）。这些改动同样按该许可提供，仅限非商业使用。
+  </p>
+  <script>import '../../scripts/grammar.js';</script>
+</Base>

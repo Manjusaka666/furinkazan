@@ -69,7 +69,7 @@ dist = ROOT / "dist"
 if dist.exists():
     for page in dist.rglob("*.html"):
         # These pages hold thousands of rare kanji and use the system font (.sys-ja) so the webfont stays small.
-        if page.relative_to(dist).parts[0] in ("words", "kanji", "grammar", "scenes", "anime", "library", "review"):
+        if page.relative_to(dist).parts[0] in ("words", "kanji", "grammar", "scenes", "anime", "library", "review", "culture", "history"):
             continue
         col.feed(page.read_text(encoding="utf8"))
         col.stack.clear()

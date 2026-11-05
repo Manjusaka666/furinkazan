@@ -1,0 +1,20 @@
+---
+import { ruby } from '../lib/ruby.js';
+import { autoRuby, romanize } from '../lib/romaji.js';
+
+const { w } = Astro.props;
+const ja = w.jaText.map((b) => (b.h ? b : { p: b.p, src: autoRuby(b.p) }));
+---
+<section class="wk" lang="ja">
+  <h2>日语原文<span>节选自日语维基百科「{w.ja}」</span></h2>
+  {ja.map((b) => (b.h ? <h3>{b.h}</h3> : <Fragment><p set:html={ruby(b.src)} /><p class="ro" lang="ja-Latn">{romanize(b.src)}</p></Fragment>))}
+</section>
+{w.zhText.length > 0 && (
+  <section class="wk wk-zh">
+    <h2>中文条目<span>节选自中文维基百科「{w.zh}」，不是上文的翻译</span></h2>
+    {w.zhText.map((b) => (b.h ? <h3>{b.h}</h3> : <p>{b.p}</p>))}
+  </section>
+)}
+<p class="credit">
+  文字：<a href={w.jaUrl} rel="noopener">日语维基百科「{w.ja}」</a>{w.zhUrl && <Fragment>、<a href={w.zhUrl} rel="noopener">中文维基百科「{w.zh}」</a></Fragment>}，<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hans" rel="noopener">CC BY-SA 4.0</a>，作者见各条目的编辑历史，取于 {w.date}。本站只做了节选和繁简转换，并由程序加上假名和罗马音（可能有误），这些改动同样按 CC BY-SA 4.0 提供。维基百科是二手资料，重要的事实请核对原典。
+</p>

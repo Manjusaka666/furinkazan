@@ -1,34 +1,28 @@
 ---
-import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Art from '../../components/Art.astro';
-import { ruby } from '../../lib/ruby.js';
+import Controls from '../../components/Controls.astro';
+import WikiText from '../../components/WikiText.astro';
+import WikiImage from '../../components/WikiImage.astro';
+import { topics } from '../../data/wiki.js';
+import { romanize } from '../../lib/romaji.js';
 
-export async function getStaticPaths() {
-  const essays = await getCollection('culture');
-  return essays.map((e) => ({ params: { slug: e.id }, props: { e } }));
-}
-const { e } = Astro.props;
-const { Content } = await render(e);
-const { title, ja, summary, art, art2, sources } = e.data;
+export const getStaticPaths = () => topics.map((w) => ({ params: { slug: w.slug }, props: { w } }));
+const { w } = Astro.props;
 ---
-<Base title={title} desc={summary} stage="culture">
+<Base title={w.zh ?? w.ja} desc={w.summary || w.ja} stage="culture" sysJa>
   <header class="essay-head">
-    <p class="kicker" lang="ja" set:html={ruby(ja)} />
-    <h1>{title}</h1>
-    <p class="sum">{summary}</p>
+    <p class="crumb"><a href={`/culture/#${w.cat}`}>文化</a></p>
+    <h1 lang="ja">{w.ja}</h1>
+    <p class="ro head-ro">{romanize(w.ja)}</p>
+    {w.zh && <p class="sum">{w.zh}</p>}
   </header>
+  <Controls zh={false} />
   <article class="essay">
-    {art && <Art name={art} eager />}
+    {w.art ? <Art name={w.art} eager /> : <WikiImage img={w.img} alt={w.ja} eager />}
     <div class="prose">
-      <Content />
+      <WikiText w={w} />
     </div>
-    {art2 && <Art name={art2} />}
-    <section class="refs">
-      <h2>参考来源</h2>
-      <ul>
-        {sources.map((s) => <li><a href={s.u} rel="noopener">{s.t}</a></li>)}
-      </ul>
-    </section>
+    {w.art2 && <Art name={w.art2} />}
   </article>
 </Base>

@@ -3,47 +3,50 @@ import Base from '../layouts/Base.astro';
 import { ART } from '../data/art.js';
 
 const GROUPS = [
-  ['日语教材', [
-    ['『いろどり 生活の日本語』（国际交流基金）', 'https://www.irodori.jpf.go.jp/en/index.html', '本站第 6–23 课的主题顺序参照其入门（A1），没有复制它的文字、插图或音频。教材和原声请到官网免费获取。'],
-    ['JF にほんご e ラーニング みなと', 'https://minato-jf.jp/'],
-    ['Marugoto 在线', 'https://www.marugoto-online.jp/'],
-    ['JF 日语教育标准', 'https://www.jfstandard.jpf.go.jp/'],
-    ['ひろがる（Hirogaru）', 'https://hirogaru-nihongo.jp/'],
-    ['NHK WORLD-JAPAN 简明日语（中文版）', 'https://www3.nhk.or.jp/nhkworld/lesson/zh/'],
-    ['JLPT 官方样题 N5', 'https://www.jlpt.jp/samples/n5.html'],
-    ['NPO 多読：にほんご多読ブックス', 'https://tadoku.org/japanese/', '按难度分级的免费读物，配合本站词汇使用。'],
-    ['NHK News Web Easy', 'https://www3.nhk.or.jp/news/easy/', '用简单日语写的新闻，带注音和朗读。'],
-    ['青空朗読', 'https://aozoraroudoku.jp/', '志愿者朗读的青空文库作品。本站没有原声，想听文学作品可以来这里。'],
-    ['Jisho', 'https://jisho.org/', '查词。'],
+  ['语法与练习', [
+    ['Tae Kim《日语语法指南》中文版（pizzamx/jpgramma）', 'https://github.com/pizzamx/jpgramma', '站内语法页的讲解、例句和练习全部来自这里，CC BY-NC-SA 3.0。本站增加了注音和罗马音、改写了版式，每页都有注明。'],
+    ['Tae Kim 原版', 'https://guidetojapanese.org/learn/', '英文原书。'],
+  ]],
+  ['发音', [
+    ['Kanji alive', 'https://kanjialive.com/', '标「母语者录音」的词来自这里，男女母语者朗读，CC BY 4.0。只用词形和读音都一致的录音。'],
+    ['Tatoeba 录音', 'https://tatoeba.org/', '例句的录音，只用声明日语为母语、并标明授权的朗读者，多为 CC BY-NC 4.0。朗读者和授权写在每句下面。'],
+    ['VOICEVOX:No.7', 'https://voicevox.hiroshiba.jp/', '标「VOICEVOX 合成」的音和假名发音，由本站预先生成。这是语音合成，声源是日语母语的配音演员，但不是真人朗读，语调可能不自然。'],
   ]],
   ['例句与词表', [
-    ['Tatoeba', 'https://tatoeba.org/en/downloads', '课程和词汇里的例句，只取自声明日语为母语的作者，CC BY 2.0 FR。每句都标明了编号和作者，中文译文也来自 Tatoeba，已转为简体。'],
-    ['JLPT 分级词表（Jonathan Waller，由 bluskyo/jlpt_vocabulary 整理）', 'https://github.com/bluskyo/jlpt_vocabulary', 'CC BY。JLPT 官方不公布词表，这是社区整理的版本。'],
-    ['Japanese-Chinese-thesaurus', 'https://github.com/lxl66566/Japanese-Chinese-thesaurus', '中文释义的主要来源，以 Unlicense 发布，但上游来历不明，释义可能有错。'],
+    ['Tatoeba', 'https://tatoeba.org/en/downloads', '例句只取自声明日语为母语的作者，CC BY 2.0 FR。每句标明编号和作者，中文译文也来自 Tatoeba。'],
+    ['JLPT 分级词表（Jonathan Waller，由 bluskyo/jlpt_vocabulary 整理）', 'https://github.com/bluskyo/jlpt_vocabulary', 'CC BY。JLPT 官方不公布词表，这是社区整理的版本，等级仅供参考。'],
+    ['Japanese-Chinese-thesaurus', 'https://github.com/lxl66566/Japanese-Chinese-thesaurus', '中文释义的主要来源，以 Unlicense 发布，上游来历不明，释义可能有错。'],
     ['中文维基词典（经 kaikki.org 提取）', 'https://kaikki.org/zhwiktionary/', '补充中文释义，CC BY-SA。'],
-    ['JMdict（EDRDG，经 jmdict-simplified）', 'https://www.edrdg.org/edrdg/licence.html', '没有中文释义的词用它的英文释义，标记为「英」，CC BY-SA 4.0。'],
+    ['JMdict（EDRDG，经 jmdict-simplified）', 'https://www.edrdg.org/edrdg/licence.html', '校对读音，并据它的标记剔除过时词。没有中文释义的词用它的英文释义，标记为「英」，CC BY-SA 4.0。'],
     ['KANJIDIC2（EDRDG）', 'https://www.edrdg.org/wiki/index.php/KANJIDIC_Project', '常用汉字的音读、训读和英文释义，CC BY-SA 4.0。'],
-    ['kuromoji.js 与 IPADIC', 'https://github.com/takuyaa/kuromoji.js', '罗马音在构建时由它分词后自动生成，不是人工标注，个别词的读法或分词可能有错。'],
+    ['MeCab 与 UniDic（国立国语研究所）', 'https://clrd.ninjal.ac.jp/unidic/', '没有现成读音的文字，读音和罗马音在构建时由它生成，高频读法经过人工复核。长尾部分没有逐条看过，个别可能有错，以原文注音为准。'],
   ]],
   ['文学原文', [
-    ['青空文库', 'https://www.aozora.gr.jp/', '文库的全文来源，每部作品都标明了底本、入力和校正者。本站只收录作者去世超过七十年的作品。'],
-    ['国立国会图书馆数字馆藏', 'https://dl.ndl.go.jp/'],
-    ['维基文库（日文）：信長公記、枕草子', 'https://ja.wikisource.org/wiki/信長公記'],
-    ['维基文库（中文）：白居易、杜甫、李白', 'https://zh.wikisource.org/wiki/春望'],
-    ['中国哲学书电子化计划：论语、孙子', 'https://ctext.org/zh'],
+    ['青空文库', 'https://www.aozora.gr.jp/', '文库的全文来源，每部作品都标明了底本、入力和校正者。本站只收录作者和译者去世超过七十年的作品。'],
+    ['国立国会图书馆数字馆藏', 'https://dl.ndl.go.jp/', '明治以来的旧书和期刊，部分需要登录或不对海外开放。'],
+    ['国書データベース（国文学研究資料館）', 'https://kokusho.nijl.ac.jp/', '古典籍的书目和影像。'],
+    ['早稻田大学古典籍综合数据库', 'https://www.wul.waseda.ac.jp/kotenseki/', '古籍和写本的高清影像。'],
+    ['デジタル源氏物語（东京大学）', 'https://genji.dl.itc.u-tokyo.ac.jp/', '《源氏物语》的版本影像和文本。'],
+    ['源氏物語の世界', 'https://www.genji-monogatari.net/', '《源氏物语》原文和现代语译对照。'],
+    ['日语维基文库', 'https://ja.wikisource.org/', '《徒然草》《竹取物语》等古典原文。'],
+    ['日本語歴史コーパス（国立国語研究所）', 'https://clrd.ninjal.ac.jp/chj/', '检索历代日语，适合研究古语词汇和语法，需要免费注册。'],
   ]],
-  ['历史、艺能与饮食', [
-    ['UNESCO：和食', 'https://ich.unesco.org/en/RL/washoku-traditional-dietary-cultures-of-the-japanese-notably-for-the-celebration-of-new-year-00869'],
-    ['农林水产省：日本の食文化', 'https://www.maff.go.jp/j/keikaku/syokubunka/culture/'],
-    ['农林水产省：うちの郷土料理', 'https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/', '各都道府县的乡土料理介绍。'],
-    ['ANIME TOURISM 88（アニメツーリズム協会）', 'https://animetourism88.com/', '动漫圣地的选定名录。'],
-    ['日语维基百科', 'https://ja.wikipedia.org/', '多数短文的事实依据，具体页面列在每篇末尾。维基是二手资料，引用时请再查原典。'],
-    ['文化デジタルライブラリー（日本艺术文化振兴会）', 'https://www2.ntj.jac.go.jp/dglib/'],
-    ['国立歴史民俗博物館', 'https://www.rekihaku.ac.jp/'],
-    ['国立国会図書館：日本の暦', 'https://www.ndl.go.jp/koyomi/'],
-    ['国立天文台：二十四節気', 'https://eco.mtk.nao.ac.jp/koyomi/faq/24sekki.html'],
-    ['表千家', 'https://www.omotesenke.jp/list2/list2-2/list2-2-1/'],
-    ['裏千家', 'https://www.urasenke.or.jp/'],
+  ['其他学习资料（只放链接）', [
+    ['『いろどり 生活の日本語』（国际交流基金）', 'https://www.irodori.jpf.go.jp/', '官方教材和录音。使用条款不允许转载为别站的课程，所以只放链接。'],
+    ['JF にほんご e ラーニング みなと', 'https://minato-jf.jp/', '国际交流基金的在线课程，选标记为免费的课。'],
+    ['NHK WORLD-JAPAN 简明日语（中文版）', 'https://www3.nhk.or.jp/nhkworld/lesson/zh/', '零基础的中文讲解课。'],
+    ['NEWS WEB EASY', 'https://news.web.nhk/news/easy/', 'NHK 用简单日语写的新闻。'],
+    ['JLPT 官方样题', 'https://www.jlpt.jp/samples/forlearners.html', 'N5 到 N1 的样题和听力。'],
+    ['NPO 多言語多読：にほんご多読ブックス', 'https://tadoku.org/japanese/free-books/', '免费分级读物。授权不允许改动，无法加注罗马音，所以只放链接。'],
+    ['青空朗読', 'https://aozoraroudoku.jp/', '朗读青空文库作品。'],
+    ['Jisho', 'https://jisho.org/', '查词。'],
+  ]],
+  ['文化、历史与动漫', [
+    ['日语维基百科', 'https://ja.wikipedia.org/', '文化、历史和动漫页的日文节选，CC BY-SA 4.0，每页标明原条目。维基百科是二手资料，引用时请再查原典。'],
+    ['中文维基百科', 'https://zh.wikipedia.org/', '这些页面的中文节选，CC BY-SA 4.0。'],
+    ['维基共享资源', 'https://commons.wikimedia.org/', '条目配图，只用自由授权的图片，作者和授权见图片说明。'],
+    ['吉卜力工作室：作品静止画', 'https://www.ghibli.jp/info/013344/', '吉卜力以「常识范围内自由使用」公开的剧照，动漫页只选用少量。'],
+    ['国立天文台：二十四节气', 'https://eco.mtk.nao.ac.jp/koyomi/faq/24sekki.html'],
     ['山梨市：風林火山の旗', 'https://www.city.yamanashi.yamanashi.jp/site/cultural-assets/1658.html'],
   ]],
   ['技术与设计', [
@@ -54,10 +57,10 @@ const GROUPS = [
   ]],
 ];
 ---
-<Base title="资料来源与致谢" desc="本站使用的公开教材、文献、图像与字体。">
+<Base title="资料来源与致谢" desc="本站使用的公开教材、文献、录音、图像与字体，以及各自的授权。">
   <div class="page-head">
     <h1>资料来源与致谢</h1>
-    <p>例句和读物来自母语者的公开文本。语法说明、练习题、中文短文、情景和动漫介绍由本站编写，没有经过母语教师审校。如果发现错误，请以下面的资料为准。</p>
+    <p>本站不自己写语法讲解、练习题和短文。这些内容都来自下面的资料，站内只做注音和排版。本站自己做的只有词汇的中文释义补充、主题词的挑选和文库的难度估计。这是个人学习项目，非商业。发现错误请以下面的原始资料为准。</p>
   </div>
   <div class="src-list">
     {GROUPS.map(([h, items]) => (
@@ -69,12 +72,8 @@ const GROUPS = [
       </section>
     ))}
     <section>
-      <h2>动漫</h2>
-      <p>本站不使用任何动漫的画面、字幕或剧本。动漫页只有作品介绍、相关词汇和极少量为讲解语法而引用的短句，版权属于原作者。正版观看请到各平台。</p>
-    </section>
-    <section>
       <h2>配图</h2>
-      <p>全部为博物馆以公有领域或 CC0 开放的馆藏。</p>
+      <p>下面的馆藏均为博物馆以公有领域或 CC0 开放。</p>
       <ul>
         {Object.values(ART).map((a) => <li><a href={a.url} rel="noopener">{a.by}『{a.title}』</a>，{a.date}，{a.museum}</li>)}
       </ul>

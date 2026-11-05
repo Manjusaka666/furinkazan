@@ -1,7 +1,7 @@
 import { addCards } from '../lib/srs.js';
 import { getDeck, setDeck, getDone, setDone, getPrefs, setPrefs } from '../lib/store.js';
 
-// Speech uses the device's own Japanese voice: nothing to download, but quality varies by device.
+// Device voice is the fallback when no recording exists: quality varies by device and it is synthetic.
 const synth = window.speechSynthesis;
 let voice;
 const pickVoice = () => { voice = synth.getVoices().find((v) => v.lang.replace('_', '-').startsWith('ja')); };
@@ -14,9 +14,10 @@ const toast = (text) => {
   toast.t = setTimeout(() => { el.textContent = ''; }, 5000);
 };
 
-export function say(text) {
-  if (!synth) return toast('这个浏览器不支持朗读，请用课程右栏的原声链接。');
-  if (!voice && synth.getVoices().length) toast('这台设备没有日语语音。可在系统设置里添加，或听右栏的原声。');
+function speak(text) {
+  if (!synth) return toast('这个浏览器不支持朗读，这句也没有真人录音。');
+  if (!voice && synth.getVoices().length) return toast('这句没有真人录音，这台设备也没有日语语音。可在系统设置里添加。');
+  if (!speak.told) { toast('这句没有真人录音，现在是设备的合成语音。'); speak.told = true; }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
   u.rate = 0.85;
@@ -25,19 +26,15 @@ export function say(text) {
   synth.speak(u);
 }
 
-const answer = (btn) => {
-  const q = btn.closest('[data-quiz]');
-  const right = Number(q.dataset.c);
-  q.querySelectorAll('.opt').forEach((o) => {
-    o.disabled = true;
-    if (Number(o.dataset.i) === right) o.dataset.state = 'right';
-  });
-  if (Number(btn.dataset.i) !== right) btn.dataset.state = 'wrong';
-  const why = document.createElement('p');
-  why.className = 'why';
-  why.textContent = q.dataset.why;
-  q.append(why);
-};
+let player;
+/** Plays the recording at /audio/<au> when there is one, otherwise the device's own Japanese voice. */
+export function say(text, au) {
+  synth?.cancel();
+  player?.pause();
+  if (!au) return speak(text);
+  player = new Audio(`/audio/${au}`);
+  player.play().catch((e) => { if (e.name !== 'AbortError') speak(text); });
+}
 
 const addOne = (btn) => {
   if (!setDeck(addCards(getDeck(), [btn.dataset.add], Date.now()))) return toast('无法保存进度：浏览器禁用了本地存储。');
@@ -55,9 +52,10 @@ const finish = (btn) => {
 
 document.addEventListener('click', (e) => {
   const sayer = e.target.closest('[data-say]');
-  if (sayer) return say(sayer.dataset.say);
-  const opt = e.target.closest('[data-quiz] .opt');
-  if (opt) return answer(opt);
+  if (sayer) {
+    if (sayer.tagName === 'A') e.preventDefault();
+    return say(sayer.dataset.say, sayer.dataset.au);
+  }
   const done = e.target.closest('[data-finish]');
   if (done) finish(done);
   const add = e.target.closest('[data-add]');

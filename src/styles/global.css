@@ -240,8 +240,6 @@ html[data-hide-zh] .zh { visibility: hidden; }
 .point h3 { font-size: 1.12rem; margin-bottom: .3rem; color: var(--stage-ink); }
 .point p { margin: 0; }
 
-.q { margin-bottom: 1.4rem; }
-.q > p { margin-bottom: .45rem; }
 .opts { display: flex; flex-wrap: wrap; gap: .45rem; }
 .opt {
   padding: .35rem .95rem; background: transparent;
@@ -251,7 +249,6 @@ html[data-hide-zh] .zh { visibility: hidden; }
 .opt:disabled { cursor: default; opacity: .6; }
 .opt[data-state='right'] { background: var(--stage-fill); border-color: var(--stage-fill); color: #fbf8ef; opacity: 1; }
 .opt[data-state='wrong'] { border-color: var(--bad); color: var(--bad); opacity: 1; text-decoration: line-through; }
-.why { margin: .5rem 0 0; color: var(--ink-soft); font-size: .95rem; }
 
 .window { background: var(--paper-deep); padding: 1.3rem 1.5rem; border-radius: 14px 18px 12px 16px; border-left: 4px solid var(--stage-glow); }
 .window h2 { font-size: 1.2rem; margin-bottom: .45rem; }
@@ -479,3 +476,39 @@ p.ro { margin: 0 0 .15rem; }
 .pager { display: flex; justify-content: space-between; gap: 1rem; padding-block: 1.5rem; font-size: 1.1rem; }
 .fine { font-size: .82rem; color: var(--ink-soft); }
 @media (max-width: 34rem) { .kanji-head { grid-template-columns: 1fr; } .kanji-draw .stroke { width: 11rem; } }
+
+/* Imported grammar guide, Wikipedia excerpts and dishes */
+.ro-b { display: block; }
+.ro-i { margin: 0 .2em; font-size: .8em; }
+.vocab .ro { margin: 0 .45em; }
+.voice { margin-left: .5rem; font-size: .72rem; color: var(--ink-soft); font-weight: 400; }
+.gx { max-width: var(--measure); padding: 0 var(--gap); }
+.gx h2 { font-size: 1.45rem; margin: 2.2rem 0 .7rem; }
+.gx h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; }
+.gx li { margin-bottom: .55rem; }
+.gx table { border-collapse: collapse; margin: 1rem 0; display: block; overflow-x: auto; max-width: 100%; }
+.gx caption { text-align: left; color: var(--ink-soft); font-size: .9rem; padding-bottom: .3rem; }
+.gx td, .gx th { border: 1px solid var(--line); padding: .35rem .6rem; font-weight: 400; text-align: center; }
+.gx th { color: var(--ink-soft); }
+.gx .sumbox { border-left: 2px solid var(--line); padding: .3rem 0 .3rem 1rem; margin: 1rem 0; }
+.gx .summary { font-weight: 500; }
+.gx .vid { display: block; margin: .5rem 0 1rem; font-size: .92rem; }
+.gx .hidex { display: none; }
+.gx .shown .hidex, .gx .hidex.shown { display: inline; }
+.gx .toggle:not(.hidex) { display: inline; }
+.gx .shown .toggle:not(.hidex) { display: none; }
+.gx .answerline { min-width: 4rem; }
+.gx [data-reveal], .gx [data-flip] { cursor: pointer; }
+.gx-nav { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; max-width: var(--measure); padding: 2rem var(--gap) 0; }
+.gx-credit { max-width: var(--measure); padding: 0 var(--gap); }
+.gx-toc { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: .35rem 1.5rem; }
+.gx-toc .ex a { color: var(--ink-soft); }
+.wk h2 { font-size: 1.15rem; margin: 2rem 0 .8rem; }
+.wk h2 span { display: block; font-size: .82rem; color: var(--ink-soft); font-weight: 400; margin-top: .15rem; }
+.wk h3 { font-size: 1.02rem; margin: 1.4rem 0 .4rem; }
+.wk-img { margin: 0 0 1.5rem; max-width: var(--measure); }
+.wk-img img { width: 100%; height: auto; display: block; }
+.wk-img figcaption { font-size: .78rem; color: var(--ink-soft); margin-top: .35rem; }
+.stills { display: grid; gap: .6rem; }
+.stills img { width: 100%; height: auto; display: block; }
+.credit { font-size: .82rem; color: var(--ink-soft); line-height: 1.7; }

@@ -1,17 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
-import { eras } from '../data/eras.js';
+import { eras, EVENTS } from '../data/eras.js';
+import { wiki } from '../data/wiki.js';
 import { ruby, plain } from '../lib/ruby.js';
 import { romanize } from '../lib/romaji.js';
-import { EVENTS } from '../data/sengoku.js';
 import works from '../data/library/index.json';
 
 const title = (slug) => works.find((w) => w.slug === slug)?.title;
 ---
-<Base title="日本史年表" desc="从绳文到令和的十六个时代，每个时代一句话，并链接到相关的文化短文。" stage="culture">
+<Base title="日本史年表" desc="从绳文到令和的十六个时代，以及战国时期的大事，每一条都连到维基百科节选和可以直接读的原文。" stage="culture" sysJa>
   <div class="page-head">
     <h1>日本史年表</h1>
-    <p>记住时代的名字和顺序，读历史和文学都会轻松很多。早期的起止年代有争议，这里取通行的说法。</p>
+    <p>早期的起止年代有争议，这里取通行的说法。每个时代旁边的一句话来自中文维基百科（<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hans" rel="noopener">CC BY-SA 4.0</a>），点进去有日文原文和出处。</p>
   </div>
   <ol class="era-list">
     {eras.map((e) => (
@@ -20,22 +20,21 @@ const title = (slug) => works.find((w) => w.slug === slug)?.title;
         <div>
           <p class="ro">{romanize(e.ja)}</p>
           <span class="era-span">{e.span}</span>
-          <strong class="era-mark" style="font-weight:500">{e.mark}</strong>
-          <p>{e.zh}{e.to && <a href={`/culture/${e.to}/`}>　读相关短文</a>}</p>
+          <p>{wiki[e.to]?.summary}{wiki[e.to] && <a href={`/culture/${e.to}/`}>　读维基百科节选</a>}</p>
         </div>
       </li>
     ))}
   </ol>
   <section class="stage-block" id="sengoku">
     <h2>战国细表</h2>
-    <p class="stage-note">从应仁之乱到岛原之乱。每一行连着短文和可以直接读的日语原文。</p>
+    <p class="stage-note">从应仁之乱到岛原之乱。条目连着维基百科节选，后面是文库里写这件事的日语原文。</p>
     <ol class="timeline">
-      {EVENTS.map(([y, text, essay, lib]) => (
+      {EVENTS.map(([y, slug, lib]) => (
         <li>
           <b>{y}</b>
-          <span>{text}
-            {essay && <a href={`/culture/${essay}/`}>短文</a>}
-            {lib && <a href={`/library/${lib}/`} lang="ja">{title(lib)}</a>}
+          <span>
+            {wiki[slug] && <a href={`/culture/${slug}/`} lang="ja">{wiki[slug].ja}</a>}{wiki[slug]?.zh && `（${wiki[slug].zh}）`}
+            {lib && title(lib) && <a href={`/library/${lib}/`} lang="ja">　原文：{title(lib)}</a>}
           </span>
         </li>
       ))}

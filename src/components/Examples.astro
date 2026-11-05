@@ -1,6 +1,7 @@
 ---
 import { ruby, plain } from '../lib/ruby.js';
 import { romanize } from '../lib/romaji.js';
+import { sentenceAudio, creditOf } from '../data/course/index.js';
 
 const { ex } = Astro.props;
 ---
@@ -8,10 +9,10 @@ const { ex } = Astro.props;
   {ex.map((e) => (
     <li>
       <div>
-        <button type="button" class="say-line" lang="ja" data-say={plain(e.ja)} set:html={ruby(e.ja)} />
+        <button type="button" class="say-line" lang="ja" data-say={plain(e.ja)} data-au={sentenceAudio[e.id]?.[0]} set:html={ruby(e.ja)} />
         <p class="ro">{romanize(e.ja)}</p>
         {e.zh && <p class="zh">{e.zh}</p>}
-        <p class="ex-src"><a href={`https://tatoeba.org/sentences/show/${e.id}`} rel="noopener">Tatoeba #{e.id}</a>，{e.by}</p>
+        <p class="ex-src"><a href={`https://tatoeba.org/sentences/show/${e.id}`} rel="noopener">Tatoeba #{e.id}</a>，{e.by}{creditOf(e.id) && `。${creditOf(e.id)}`}</p>
       </div>
     </li>
   ))}

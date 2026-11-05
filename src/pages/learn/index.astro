@@ -1,28 +1,62 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Enso from '../../components/Enso.astro';
-import { STAGES, lessonsOf } from '../../data/lessons/index.js';
-import { ruby } from '../../lib/ruby.js';
-import { romanize } from '../../lib/romaji.js';
-import { levelsOf, grammarOf } from '../../data/course/index.js';
+import { STAGES } from '../../data/stages.js';
+import { LEVELS } from '../../data/course/index.js';
+import toc from '../../data/grammar/index.json';
 import works from '../../data/library/index.json';
 
-const MORE = [
-  ['https://www.irodori.jpf.go.jp/en/index.html', 'いろどり', '零基础到初中级，国际交流基金的免费教材和原声'],
-  ['https://minato-jf.jp/', 'みなと', '国际交流基金的在线课程'],
-  ['https://www3.nhk.or.jp/nhkworld/lesson/zh/', 'NHK 简明日语', '中文讲解的入门广播课'],
-  ['https://tadoku.org/japanese/', 'NPO 多読', '从入门起步的分级读物'],
-  ['https://www3.nhk.or.jp/news/easy/', 'News Web Easy', '中级开始读的简单新闻，有朗读'],
-  ['https://aozoraroudoku.jp/', '青空朗読', '听文库里的文学作品'],
-  ['https://www.jlpt.jp/samples/n5.html', 'JLPT 样题', '想测一下水平时用'],
-];
-const READ = { forest: ['N4'], fire: ['N3', 'N2'], mountain: ['N1'] };
-const readCount = (key) => works.filter((w) => READ[key]?.includes(w.lv)).length;
+const count = (s) => toc.filter((t) => t.section === s).length;
+const lv = (id) => [`/words/?level=${id}`, `${LEVELS[id].name} 词汇`, `${LEVELS[id].words.length} 词，带母语者例句和发音`];
+const g = (slug, name, s) => [`/grammar/${slug}/`, name, `Tae Kim《日语语法指南》，${count(s)} 页，含原书练习`];
+const iro = 'https://www.irodori.jpf.go.jp';
+const reads = (levels) => works.filter((w) => levels.includes(w.lv)).length;
+const read = (...titles) => titles.map((t) => works.find((w) => w.title === t)).filter(Boolean).map((w) => [`/library/${w.slug}/`, w.title, `${w.author}，${w.lv} 左右`]);
+const MAP = {
+  wind: [
+    ['/kana/', '假名表', '笔顺动画、字源和发音'],
+    g('writing', '日语书写系统', '日语书写系统'),
+    [`${iro}/starter/pdf.html`, '『いろどり』入门（国际交流基金）', '官方教材 PDF，第 0 课起配官方录音'],
+    ['https://www3.nhk.or.jp/nhkworld/lesson/zh/', 'NHK 简明日语', '中文讲解的入门广播课'],
+    ['https://minato-jf.jp/', 'JF みなと', '国际交流基金的在线课程，选标记为免费的课'],
+  ],
+  forest: [
+    g('basic', '基本语法', '基本语法'), lv('n5'), lv('n4'),
+    [`${iro}/elementary01/pdf.html`, '『いろどり』初级 1', '官方教材和录音'],
+    [`${iro}/elementary02/pdf.html`, '『いろどり』初级 2', '官方教材和录音'],
+    ['https://www.irodori-online.jpf.go.jp/', 'いろどり在线课程', '官方网页版练习'],
+    ['/scenes/', '情景词汇', '便利店、车站等场景的词和例句'],
+    ['https://tadoku.org/japanese/free-books/', 'NPO 多言語多読的免费读物', '从入门起步的分级读物，含朗读，只能到原站阅读'],
+    ...read('ごん狐', '注文の多い料理店'),
+  ],
+  fire: [
+    g('essential', '语法精要', '语法精要'), g('specialexpressions', '特定的表达方式', '特定的表达方式'), lv('n3'), lv('n2'),
+    [`${iro}/pre-intermediate/pdf.html`, '『いろどり』初中级', '官方教材和录音'],
+    ['https://news.web.nhk/news/easy/', 'NEWS WEB EASY', 'NHK 用简单日语写的新闻，有注音和朗读，内容是当下的日本'],
+    ...read('蜘蛛の糸', '羅生門'),
+    ['/library/', '文库', `${reads(['N4', 'N3', 'N2'])} 部 N2 及以下难度的原文（难度为本站估计）`],
+  ],
+  mountain: [
+    g('advanced', '高级话题', '高级话题'), lv('n1'),
+    ['/library/', '文库', `${works.length} 部原文，含 ${reads(['N1'])} 部较难的作品`],
+    ...read('坊っちゃん', 'こころ', '人間失格'),
+    ['/culture/', '文化', '日语维基百科节选'],
+    ['/library/#classic', '古典入门', '先读竹取物语和方丈记。古文语法和现代日语差别很大，建议现代文读顺之后再开始'],
+    ['https://www.genji-monogatari.net/', '源氏物語の世界', '《源氏物语》原文和现代语译对照'],
+    ['https://ja.wikisource.org/wiki/%E5%BE%92%E7%84%B6%E8%8D%89_(%E6%A0%A1%E8%A8%BB%E6%97%A5%E6%9C%AC%E6%96%87%E5%AD%B8%E5%A4%A7%E7%B3%BB)', '徒然草（维基文库）', '原文带校注'],
+    ['https://ja.wikisource.org/wiki/%E7%AB%B9%E5%8F%96%E7%89%A9%E8%AA%9E_(%E5%9C%8B%E6%B0%91%E6%96%87%E5%BA%AB)', '竹取物语（维基文库）', '原文'],
+    ['https://genji.dl.itc.u-tokyo.ac.jp/', 'デジタル源氏物語', '东京大学的版本影像和文本'],
+    ['https://kokusho.nijl.ac.jp/', '国書データベース', '古典籍的书目和影像'],
+    ['https://dl.ndl.go.jp/', '国立国会图书馆数字馆藏', '明治以来的旧书和期刊，部分不对海外开放'],
+    ['https://clrd.ninjal.ac.jp/chj/', '日本語歴史コーパス', '检索历代日语，需要免费注册'],
+    ['https://www.jlpt.jp/samples/forlearners.html', 'JLPT 官方样题', '想测一下水平时用'],
+    ['https://aozoraroudoku.jp/', '青空朗読', '听文库里的文学作品'],
+  ],
+};
 ---
-<Base title="课程" desc="从假名到 N1 和原文阅读：主题课、分级词汇、语法与读物，学什么、学多少由你定。">
+<Base title="路线" desc="从假名到 N1 和原文阅读：语法、词汇、官方教材和读物按难度排好的地图，学什么、学多少由你定。">
   <div class="page-head">
-    <h1>课程</h1>
-    <p>这里是一张地图，不是必须走完的路线。四个阶段只是告诉你各部分大概有多难，每一课都能单独打开。没有每日任务，也没有课数上限。第 6 到 23 课的主题与国际交流基金『いろどり 入门』相对应，可以配合它的原声一起听。</p>
+    <h1>路线</h1>
+    <p>这是一张地图，不是必须走完的路线。本站不自己写语法讲解、练习题和短文：下面每一项都是公开的正规资料，站内的标明了出处和授权，站外的直接链接到原站。</p>
   </div>
   {Object.entries(STAGES).map(([key, s]) => (
     <section class="stage-block" id={key} data-stage={key}>
@@ -31,35 +65,9 @@ const readCount = (key) => works.filter((w) => READ[key]?.includes(w.lv)).length
         <h2>{s.name}</h2>
         <span lang="ja">{s.line}</span>
       </div>
-      <p class="stage-note">{s.desc}</p>
-      <ol class="lesson-list">
-        {lessonsOf(key).map((l) => (
-          <li>
-            <a href={`/learn/${l.slug}/`} data-lesson={l.slug}>
-              <Enso />
-              <span class="l-n">{l.n}</span>
-              <span class="l-title"><span lang="ja" set:html={ruby(l.title)} /><span class="ro">{romanize(l.title)}</span><span class="l-zh">{l.zh}</span></span>
-            </a>
-          </li>
-        ))}
-      </ol>
-      {levelsOf(key).length > 0 && (
-        <ul class="level-links">
-          {levelsOf(key).map(([id, lv]) => (
-            <li>
-              <a href={`/words/?level=${id}`}><b>{lv.name} 词汇</b>{lv.words.length} 词</a>
-              <a href={`/grammar/${id}/`}><b>{lv.name} 语法</b>{grammarOf(id).length} 个句型</a>
-            </li>
-          ))}
-          {readCount(key) > 0 && <li><a href="/library/"><b>读原文</b>文库里有 {readCount(key)} 部这个难度的作品</a></li>}
-        </ul>
-      )}
+      <ul class="level-links">
+        {MAP[key].map(([u, t, x]) => <li><a href={u} rel={u.startsWith('http') ? 'noopener' : undefined}><b>{t}</b>{x}</a></li>)}
+      </ul>
     </section>
   ))}
-  <section class="stage-block" id="more">
-    <div class="stage-title"><h2>配着用的公开资料</h2></div>
-    <ul class="level-links">
-      {MORE.map(([u, t, x]) => <li><a href={u} rel="noopener"><b>{t}</b>{x}</a></li>)}
-    </ul>
-  </section>
 </Base>

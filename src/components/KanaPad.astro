@@ -36,10 +36,11 @@ const col = script === 'hira' ? 1 : 2;
   const root = document.querySelector('[data-kana-pad]');
   const col = Number(root.dataset.col);
   const svg = root.querySelector('.stroke');
-  let char;
+  let char, au;
   const show = (cell) => {
     const c = JSON.parse(cell.dataset.pad);
     char = c[col];
+    au = `kana/${c[0]}.aac`;
     root.querySelector('.pad-char').textContent = char;
     root.querySelector('.pad-ro').textContent = c[0];
     const src = c[col + 2];
@@ -49,8 +50,8 @@ const col = script === 'hira' ? 1 : 2;
   };
   root.addEventListener('click', (e) => {
     const cell = e.target.closest('[data-pad]');
-    if (cell) { show(cell); say(char); }
-    if (e.target.closest('[data-pad-say]')) say(char);
+    if (cell) { show(cell); say(char, au); }
+    if (e.target.closest('[data-pad-say]')) say(char, au);
     if (e.target.closest('[data-pad-again]')) drawStrokes(svg, char);
   });
   // The first kana starts writing itself once the pad scrolls into view, so the feature explains itself.

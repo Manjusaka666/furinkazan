@@ -1,21 +1,30 @@
-// Era boundaries follow the conventional periodization; early dates are approximate and debated.
+// Era boundaries follow the conventional periodization; early dates are approximate and debated. The text beside each comes from Wikipedia.
 export const eras = [
-  { ja: '縄文{じょうもん}', span: '约 1.6 万年前起', zh: '狩猎采集，绳纹土器。', mark: '定居与最早的陶器' },
-  { ja: '弥生{やよい}', span: '约前 10 世纪起（有争议）', zh: '水稻与金属器自大陆传入，出现聚落与小国。', mark: '稻作' },
-  { ja: '古墳{こふん}', span: '约 3–7 世纪', zh: '大型前方后圆坟；大和政权形成；汉字与佛教陆续传入。', mark: '倭王与渡来人' },
-  { ja: '飛鳥{あすか}', span: '592–710', zh: '圣德太子时代；遣隋使；大化改新。法隆寺建成。', mark: '佛教与律令' },
-  { ja: '奈良{なら}', span: '710–794', zh: '平城京。『古事记』『日本书纪』『万叶集』。东大寺大佛。', mark: '唐风的都城', to: 'kana-origin' },
-  { ja: '平安{へいあん}', span: '794–1185', zh: '平安京（今京都）。假名成熟，『源氏物语』『枕草子』。摄关政治。', mark: '国风文化', to: 'genji-makura' },
-  { ja: '鎌倉{かまくら}', span: '1185–1333', zh: '武士政权。禅宗与宋文化传入；荣西带回茶。两次元军来袭。', mark: '武士与禅', to: 'tea' },
-  { ja: '室町{むろまち}', span: '1336–1573', zh: '能乐、书院造、枯山水。东山文化；珠光的侘茶。后期进入战国。', mark: '东山文化', to: 'wabisabi' },
-  { ja: '戦国{せんごく}', span: '约 1467–1590（与室町、安土桃山重叠）', zh: '群雄割据，武田信玄、上杉谦信、织田信长。铁炮与基督教传入。', mark: '风林火山', to: 'furinkazan' },
-  { ja: '安土桃山{あづちももやま}', span: '1573–1603', zh: '信长与秀吉。千利休完成侘茶；金碧障壁画。', mark: '黄金与两畳', to: 'wabisabi' },
-  { ja: '江戸{えど}', span: '1603–1868', zh: '德川幕府；长期太平；歌舞伎、浮世绘、俳谐、寿司。', mark: '町人的时代', to: 'edo' },
-  { ja: '明治{めいじ}', span: '1868–1912', zh: '维新与急速西化；太阳历；言文一致；对外战争开始。', mark: '造词的时代', to: 'meiji' },
-  { ja: '大正{たいしょう}', span: '1912–1926', zh: '大众文化兴起；关东大地震（1923）。', mark: '大正民主', to: 'kindai' },
-  { ja: '昭和{しょうわ}', span: '1926–1989', zh: '军国主义与侵略战争，战败；战后重建与高速增长。1964 东京奥运与新干线。', mark: '战争与复兴' },
-  { ja: '平成{へいせい}', span: '1989–2019', zh: '泡沫破裂与长期停滞；阪神、东日本大地震。', mark: '灾害与反思' },
-  { ja: '令和{れいわ}', span: '2019–', zh: '年号首次取自日本典籍『万叶集』。', mark: '当代' },
+  { ja: '縄文{じょうもん}', span: '约 1.6 万年前起', to: 'jomon' },
+  { ja: '弥生{やよい}', span: '约前 10 世纪起（有争议）', to: 'yayoi' },
+  { ja: '古墳{こふん}', span: '约 3–7 世纪', to: 'kofun' },
+  { ja: '飛鳥{あすか}', span: '592–710', to: 'asuka' },
+  { ja: '奈良{なら}', span: '710–794', to: 'nara' },
+  { ja: '平安{へいあん}', span: '794–1185', to: 'heian' },
+  { ja: '鎌倉{かまくら}', span: '1185–1333', to: 'kamakura' },
+  { ja: '室町{むろまち}', span: '1336–1573', to: 'muromachi' },
+  { ja: '戦国{せんごく}', span: '约 1467–1590（与室町、安土桃山重叠）', to: 'sengoku' },
+  { ja: '安土桃山{あづちももやま}', span: '1573–1603', to: 'azuchi' },
+  { ja: '江戸{えど}', span: '1603–1868', to: 'edo' },
+  { ja: '明治{めいじ}', span: '1868–1912', to: 'meiji-era' },
+  { ja: '大正{たいしょう}', span: '1912–1926', to: 'taisho' },
+  { ja: '昭和{しょうわ}', span: '1926–1989', to: 'showa' },
+  { ja: '平成{へいせい}', span: '1989–2019', to: 'heisei' },
+  { ja: '令和{れいわ}', span: '2019–', to: 'reiwa' },
+];
+
+// [year, Wikipedia topic, library slug]: 战国细表. No prose of ours, the names come from the articles.
+export const EVENTS = [
+  ['1467', 'sengoku-onin', 'onin'], ['1543', 'teppo', null], ['1549', 'xavier', null], ['1555', 'itsukushima', 'itsukushima'],
+  ['1560', 'sengoku-okehazama', 'okehazama'], ['1561', 'sengoku-kawanakajima', 'kawanakajima'], ['1570', 'anegawa', 'anegawa'],
+  ['1575', 'sengoku-nagashino', 'nagashino'], ['1582', 'sengoku-honnoji', 'yamazaki'], ['1583', 'shizugatake', 'shizugatake'],
+  ['1588', 'katanagari', null], ['1590', 'odawara', 'odawara'], ['1592', 'sengoku-imjin', null], ['1600', 'sengoku-sekigahara', 'itojo'],
+  ['1615', 'osaka-no-jin', 'osaka-natsu'], ['1637', 'shimabara', 'shimabara'],
 ];
 
 export const CATS = {

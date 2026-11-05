@@ -1,17 +1,20 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { LEVELS, grammarOf } from '../../data/course/index.js';
+import toc from '../../data/grammar/index.json';
+
+const sections = [...new Set(toc.map((t) => t.section))];
+const isEx = (t) => t.slug.endsWith('_ex');
 ---
-<Base title="语法" desc="N5 到 N1 的句型，每个都有中文说明、母语者例句和罗马音。" sysJa>
+<Base title="语法" desc={`Tae Kim《日语语法指南》中文版全文 ${toc.length} 页，从假名到高级句型，含原书练习，加上了假名和罗马音。`} sysJa>
   <div class="page-head">
-    <h1>语法</h1>
-    <p>按级别列出的句型。可以当查询表用，遇到不懂的直接跳过去。</p>
+    <h1>日语语法指南</h1>
+    <p>这是 Tae Kim 的 <a href="https://guidetojapanese.org/learn/" rel="noopener">Guide to Learning Japanese</a>，pizzamx 的<a href="https://res.wokanxing.info/jpgramma/" rel="noopener">中文译本</a>，全部 {toc.length} 页，讲解和练习都是原文。作者是学习者出身，不是语言学教材，想对照权威说明可以配合<a href="https://www.irodori.jpf.go.jp/" rel="noopener">国际交流基金『いろどり』</a>和 <a href="https://www.jlpt.jp/samples/forlearners.html" rel="noopener">JLPT 官方样题</a>。</p>
   </div>
-  {Object.entries(LEVELS).map(([id, l]) => (
+  {sections.map((s) => (
     <section class="stage-block">
-      <h2><a href={`/grammar/${id}/`}>{l.name}</a></h2>
-      <ul class="pattern-list">
-        {grammarOf(id).map((g, i) => <li><a lang="ja" href={`/grammar/${id}/#g${i}`}>{g.p}</a></li>)}
+      <h2>{s}</h2>
+      <ul class="gx-toc">
+        {toc.filter((t) => t.section === s).map((t) => <li class:list={[{ ex: isEx(t) }]}><a href={`/grammar/${t.slug}/`}>{t.title}</a></li>)}
       </ul>
     </section>
   ))}
