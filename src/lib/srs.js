@@ -11,9 +11,9 @@ export function addCards(deck, ids, now) {
 
 /** Remembered: move up a box. Forgot: back to box 0 and due again in this session. */
 export function grade(card, remembered, now) {
-  if (!remembered) return { box: 0, due: now };
+  if (!remembered) return { box: 0, due: now, at: now };
   const box = Math.min(card.box + 1, INTERVALS.length - 1);
-  return { box, due: now + INTERVALS[card.box] * DAY };
+  return { box, due: now + INTERVALS[card.box] * DAY, at: now };
 }
 
 export const dueIds = (deck, now) =>

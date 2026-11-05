@@ -23,8 +23,8 @@ if (done.size) {
     cta.href = `/learn/${next[0]}/`;
     cta.textContent = `继续第 ${next[2]} 课`;
   } else {
-    cta.href = '/review/';
-    cta.textContent = '全部学完了，去复习';
+    cta.href = '/learn/';
+    cta.textContent = '继续学习';
   }
   for (const stage of new Set(index.map((l) => l[1]))) {
     const n = index.filter((l) => l[1] === stage && done.has(l[0])).length;

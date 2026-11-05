@@ -7,7 +7,7 @@ const culture = defineCollection({
   schema: z.object({
     title: z.string(),
     ja: z.string(),
-    cat: z.enum(['history', 'literature', 'aesthetics', 'tradition', 'food']),
+    cat: z.enum(['history', 'literature', 'aesthetics', 'tradition', 'food', 'wakan', 'sengoku']),
     order: z.number(),
     summary: z.string(),
     art: z.string().optional(),

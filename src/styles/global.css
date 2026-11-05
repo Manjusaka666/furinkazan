@@ -9,16 +9,15 @@
 @view-transition { navigation: auto; }
 
 :root {
-  color-scheme: light dark;
-  --ink: #1d1c17;
-  --ink-soft: #5b5748;
-  --paper: #f0eadb;
-  --paper-deep: #e6dec9;
-  --line: rgb(29 28 23 / .16);
-  --night: #151512;
+  color-scheme: light;
+  --ink: #2e2c25;
+  --ink-soft: #625d4d;
+  --paper: #f3f1e6;
+  --paper-deep: #e9e4d3;
+  --line: rgb(46 44 37 / .16);
   --stage: #6c7f4f;
   --stage-ink: #4b5a33;
-  --stage-soft: #c6d0b0;
+  --stage-soft: #dde3c8;
   --stage-glow: #c6a348;
   --good: #4b5a33;
   --bad: #8c2f2d;
@@ -29,28 +28,11 @@
   --gap: clamp(1.25rem, 4vw, 3rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #ece6d6;
-    --ink-soft: #a9a491;
-    --paper: #171714;
-    --paper-deep: #22221d;
-    --line: rgb(236 230 214 / .16);
-    --good: #c6d0b0;
-    --bad: #e29a94;
-  }
-}
-
-[data-stage='wind'] { --stage: #4a6460; --stage-ink: #3c524f; --stage-soft: #bfd0b8; --stage-glow: #7a9387; }
-[data-stage='forest'] { --stage: #6c7f4f; --stage-ink: #4b5a33; --stage-soft: #c6d0b0; --stage-glow: #c6a348; }
-[data-stage='fire'] { --stage: #8c2f2d; --stage-ink: #8c2f2d; --stage-soft: #e0c4bd; --stage-glow: #b76f6a; }
-[data-stage='mountain'] { --stage: #4f6072; --stage-ink: #435263; --stage-soft: #cdd8d2; --stage-glow: #d9b07c; }
-[data-stage='culture'] { --stage: #7e6554; --stage-ink: #6a5345; --stage-soft: #e9d6be; --stage-glow: #a78a73; }
-
-@media (prefers-color-scheme: dark) {
-  [data-stage] { --stage-ink: var(--stage-soft); }
-  :root { --stage-ink: #c6d0b0; }
-}
+[data-stage='wind'] { --stage: #4a6460; --stage-ink: #3c524f; --stage-soft: #d3dfcc; --stage-glow: #7a9387; }
+[data-stage='forest'] { --stage: #6c7f4f; --stage-ink: #4b5a33; --stage-soft: #dde3c8; --stage-glow: #c6a348; }
+[data-stage='fire'] { --stage: #8c2f2d; --stage-ink: #8c2f2d; --stage-soft: #ead3cb; --stage-glow: #b76f6a; }
+[data-stage='mountain'] { --stage: #4f6072; --stage-ink: #435263; --stage-soft: #d5dde2; --stage-glow: #d9b07c; }
+[data-stage='culture'] { --stage: #7e6554; --stage-ink: #6a5345; --stage-soft: #efe0cc; --stage-glow: #a78a73; }
 
 /* Solid fills under light text; the raw forest green is only 4.1:1 against it. */
 :root, [data-stage] { --stage-fill: color-mix(in srgb, var(--stage) 84%, #1d1c17); }
@@ -101,7 +83,7 @@ html[data-hide-zh] .zh { visibility: hidden; }
 }
 .top a { color: inherit; text-decoration: none; }
 .logo { font-size: 1.35rem; letter-spacing: .12em; }
-.top nav { display: flex; gap: clamp(.9rem, 2.4vw, 1.8rem); font-size: .95rem; }
+.top nav { display: flex; flex-wrap: wrap; gap: clamp(.9rem, 2.4vw, 1.8rem); font-size: .95rem; }
 .top nav a[aria-current='page'] { border-bottom: 1px solid currentColor; }
 .top nav a:hover { color: var(--stage-ink); }
 
@@ -121,15 +103,9 @@ html[data-hide-zh] .zh { visibility: hidden; }
 .page-head h1 { font-size: clamp(2rem, 5vw, 3.25rem); }
 .page-head p { margin-top: .9rem; max-width: var(--measure); color: var(--ink-soft); }
 
-/* Home: the ink page and its colour bands, after the reference post. */
-html:has(body.home) { color-scheme: dark; background: var(--night); }
-.home { background: var(--night); color: #f0eadb; min-height: 100vh; --line: rgb(240 234 219 / .16); }
+/* Home: colour bands on paper, the pale end of each 宋式 palette. */
 .home a { color: inherit; }
-.home :focus-visible { outline-color: #d9c89a; }
-.home rt { color: #cfc8b4; }
 .home .top { border-color: transparent; }
-.home .foot { border-color: var(--line); color: #a9a491; }
-.home .foot a { color: inherit; }
 .home-grid {
   display: grid;
   grid-template-columns: minmax(18rem, 5fr) minmax(0, 8fr);
@@ -146,15 +122,17 @@ html:has(body.home) { color-scheme: dark; background: var(--night); }
 }
 .hero-text { padding-top: clamp(.5rem, 3vh, 2rem); }
 .hero-text .lede { font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.6; margin-bottom: 1.1rem; }
-.hero-text p { color: #cfc8b4; font-size: 1rem; }
+.hero-text p { color: var(--ink-soft); font-size: 1rem; }
+.hero-text .lede { color: var(--ink); }
+.banner { color: #3c524f; }
 .cta {
   display: inline-block; margin-top: .6rem; padding: .6rem 1.5rem;
-  background: #f0eadb; color: #1d1c17 !important;
+  background: #4a6460; color: #fbf8ef !important;
   border-radius: 3px 7px 4px 6px; text-decoration: none;
 }
-.cta:hover { background: #d9c89a; }
-.today { margin-top: 1.75rem; padding-top: 1.1rem; border-top: 1px solid var(--line); font-size: .95rem; min-height: 6.5rem; color: #cfc8b4; }
-.today strong { font-weight: 400; color: #f0eadb; font-size: 1.15rem; }
+.cta:hover { background: #3c524f; }
+.today { margin-top: 1.75rem; padding-top: 1.1rem; border-top: 1px solid var(--line); font-size: .95rem; min-height: 6.5rem; color: var(--ink-soft); }
+.today strong { font-weight: 400; color: var(--ink); font-size: 1.15rem; }
 /* The landing page has no other kanji under lang=ja: a system face here saves fetching the 215 KB kanji file. */
 .today :lang(ja) { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif CJK JP', serif; }
 
@@ -164,8 +142,8 @@ html:has(body.home) { color-scheme: dark; background: var(--night); }
   display: grid; grid-template-columns: auto minmax(0, 21rem); justify-content: start; gap: clamp(1rem, 2.5vw, 2rem); align-items: center;
   min-height: clamp(11.5rem, 22vh, 15rem);
   padding: clamp(1.1rem, 2.5vw, 2rem);
-  background: var(--stage);
-  color: #fbf8ef !important;
+  background: var(--stage-soft);
+  color: var(--ink) !important;
   text-decoration: none;
 }
 /* Slightly uneven corners: no two hand-cut edges match. */
@@ -173,22 +151,18 @@ html:has(body.home) { color-scheme: dark; background: var(--night); }
 .band:nth-child(2) { border-radius: 19px 14px 20px 15px; }
 .band:nth-child(3) { border-radius: 14px 19px 16px 20px; }
 .band:nth-child(4) { border-radius: 20px 15px 18px 14px; }
-.band::before { /* keeps small text at AA on the lighter greens */
-  content: ''; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(90deg, rgb(20 20 15 / .3), rgb(20 20 15 / .26) 24rem, rgb(20 20 15 / .22) 30rem, rgb(20 20 15 / .08) 40rem, transparent 50rem);
-}
 .band picture { position: absolute; inset: 0 0 0 max(42%, 29rem); z-index: -2; overflow: hidden; }
 .band img {
   width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center);
-  mix-blend-mode: luminosity;
-  opacity: .62;
+  mix-blend-mode: multiply;
+  opacity: .5;
   transform: scale(1.05); /* crops the pale margin of the scanned prints */
   mask-image: linear-gradient(90deg, transparent, #000 60%);
   transition: opacity .6s ease;
 }
-.band:hover img { opacity: .85; }
-.band .glyph { font-size: clamp(3.6rem, 7vw, 5.5rem); line-height: 1; margin: 0; }
-.band .glyph rt { font-size: .17em; color: #f0eadb; }
+.band:hover img { opacity: .7; }
+.band .glyph { font-size: clamp(3.6rem, 7vw, 5.5rem); line-height: 1; margin: 0; color: var(--stage-ink); }
+.band .glyph rt { font-size: .17em; color: var(--ink-soft); }
 .band h2 { font-size: clamp(1.25rem, 2vw, 1.6rem); }
 .band h2 .line { display: block; font-size: .72em; letter-spacing: .2em; opacity: .92; margin-bottom: .1em; }
 .band p { margin: .35rem 0 0; font-size: .95rem; line-height: 1.7; }
@@ -196,7 +170,7 @@ html:has(body.home) { color-scheme: dark; background: var(--night); }
 
 .home-culture { padding: clamp(2rem, 6vw, 4rem) var(--gap) 0; }
 .home-culture h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); margin-bottom: 1rem; }
-.home-culture > p { max-width: var(--measure); color: #cfc8b4; }
+.home-culture > p { max-width: var(--measure); color: var(--ink-soft); }
 .cats { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; list-style: none; margin: 1.25rem 0 0; padding: 0; font-size: 1.15rem; }
 .cats a { text-decoration: none; border-bottom: 1px solid var(--line); }
 .cats a:hover { border-color: currentColor; }
@@ -226,11 +200,10 @@ html:has(body.home) { color-scheme: dark; background: var(--night); }
 .done .enso { color: var(--stage-ink); }
 
 /* Lesson */
-.lesson-head { background: var(--stage-fill); color: #fbf8ef; padding: clamp(2rem, 6vw, 4rem) var(--gap) clamp(1.5rem, 4vw, 2.5rem); }
+.lesson-head { background: var(--stage-soft); color: var(--ink); padding: clamp(2rem, 6vw, 4rem) var(--gap) clamp(1.5rem, 4vw, 2.5rem); }
 .lesson-head a { color: inherit; }
-.lesson-head rt { color: #f0eadb; }
 .lesson-head .crumb { font-size: .9rem; margin-bottom: 1.1rem; }
-.lesson-head .crumb a { text-decoration: none; border-bottom: 1px solid rgb(251 248 239 / .5); }
+.lesson-head .crumb a { text-decoration: none; border-bottom: 1px solid var(--line); }
 .lesson-head h1 { font-size: clamp(1.9rem, 5vw, 3.1rem); line-height: 1.7; }
 .lesson-head .sub { font-size: 1.1rem; margin: .1rem 0 0; }
 .controls { display: flex; flex-wrap: wrap; gap: .4rem 1.3rem; padding: .7rem var(--gap); border-bottom: 1px solid var(--line); font-size: .9rem; position: sticky; top: 0; background: var(--paper); z-index: 2; }
@@ -320,7 +293,7 @@ dialog {
   border: 0; padding: 1.5rem; max-width: min(24rem, 92vw); width: 100%; color: var(--ink); background: var(--paper);
   border-radius: 16px 20px 13px 18px;
 }
-dialog::backdrop { background: rgb(15 15 12 / .55); }
+dialog::backdrop { background: rgb(46 44 37 / .4); }
 .stroke { width: min(100%, 15rem); aspect-ratio: 1; display: block; margin: 0 auto .8rem; background: var(--paper-deep); border-radius: 10px; }
 .stroke path { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 2; stroke-dashoffset: 1.01; animation: draw .7s ease-in-out forwards; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
@@ -336,6 +309,14 @@ dialog::backdrop { background: rgb(15 15 12 / .55); }
 .trainer .score { text-align: center; margin: .8rem 0 0; font-size: .92rem; color: var(--ink-soft); }
 .trainer select { font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--line); padding: .15rem .4rem; }
 .trainer-opts { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: .92rem; margin-bottom: .9rem; align-items: center; }
+
+/* Account */
+.account { max-width: 26rem; }
+.account label { display: grid; gap: .2rem; margin-bottom: .9rem; }
+.account input { font: inherit; color: inherit; padding: .45rem .7rem; background: #fbf9f1; border: 1px solid var(--line); border-radius: 3px 6px 4px 5px; }
+.account .row { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .8rem; }
+.hint { font-size: .9rem; color: var(--ink-soft); }
+.auth-msg { color: var(--bad); }
 
 /* Review */
 .review { max-width: 34rem; padding: 0 var(--gap); }
@@ -409,8 +390,7 @@ dialog::backdrop { background: rgb(15 15 12 / .55); }
   body { font-size: 1rem; }
   .band { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
   .band picture { inset: 0 0 0 30%; }
-  .band img { opacity: .3; }
-  .band::before { background: rgb(20 20 15 / .4); }
+  .band img { opacity: .22; }
   .band .glyph { font-size: 3.2rem; }
   .lines li { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .who { padding-top: 0; }
@@ -424,3 +404,28 @@ dialog::backdrop { background: rgb(15 15 12 / .55); }
   .stroke path { animation: none; stroke-dashoffset: 0; }
   .band img { transition: none; }
 }
+
+/* Levels, library: rare kanji fall back to the system serif; a single font keeps them from looking mixed. */
+.sys-ja { --jp: 'FK Latin', 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif CJK JP', serif; }
+.unit { padding: 1.5rem var(--gap) 3rem; max-width: 46rem; }
+.word { padding: 1.1rem 0; border-bottom: 1px solid var(--line); }
+.word h2 { font-size: 1.5rem; font-weight: 400; line-height: 1.9; margin: 0; }
+.gloss { margin: 0 0 .5rem; color: var(--ink-soft); }
+.ex-src { margin: .1rem 0 0; font-size: .8rem; color: var(--ink-soft); }
+.examples .say-line { font-size: 1.12rem; }
+.lesson-list.units { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0 2rem; }
+.units .l-title span:first-child { font-size: 1rem; }
+.level-links { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; gap: .3rem; }
+.level-links li { display: flex; flex-wrap: wrap; gap: .2rem 2rem; }
+.level-links b { font-weight: 500; margin-right: .6rem; }
+.reader { padding: 1.5rem var(--gap) 3rem; max-width: 44rem; }
+.guide { color: var(--ink-soft); padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+.text { font-size: 1.14rem; line-height: 2.15; }
+.text p { margin: 0 0 .9em; text-indent: 1em; content-visibility: auto; contain-intrinsic-size: auto 5em; }
+.credit { font-size: .85rem; color: var(--ink-soft); margin-top: 2.5rem; }
+.controls .btn { padding: .25rem .8rem; font-size: .88rem; }
+.sengoku-art { padding: 0 var(--gap); margin-bottom: 2rem; max-width: 60rem; }
+.timeline { list-style: none; margin: 0; padding: 0; }
+.timeline li { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: .8rem; padding: .55rem 0; border-bottom: 1px solid var(--line); }
+.timeline b { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--stage-ink); }
+.timeline a { margin-left: .5rem; font-size: .92rem; }

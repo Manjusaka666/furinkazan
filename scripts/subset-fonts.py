@@ -68,6 +68,9 @@ col = Collector()
 dist = ROOT / "dist"
 if dist.exists():
     for page in dist.rglob("*.html"):
+        # These pages hold thousands of rare kanji and use the system font (.sys-ja) so the webfont stays small.
+        if page.relative_to(dist).parts[0] in ("levels", "library", "review"):
+            continue
         col.feed(page.read_text(encoding="utf8"))
         col.stack.clear()
 # Characters only client scripts render: solar terms, source kanji, review cards.

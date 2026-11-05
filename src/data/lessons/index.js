@@ -11,22 +11,22 @@ export const STAGES = {
     art: 'wind', colorName: '青瓦', hex: '#4A6460',
   },
   forest: {
-    kanji: '林', yomi: 'はやし', line: '徐如林', lineZh: '其徐如林', name: '句子的骨架',
-    desc: '再慢。问候、介绍、喜好、有无，把最基本的句型一棵一棵种下去。',
+    kanji: '林', yomi: 'はやし', line: '徐如林', lineZh: '其徐如林', name: '初级',
+    desc: '再慢。十八个生活主题把基本句型种下去，再用 N5、N4 的词和语法把林子养密。',
     art: 'forest', colorName: '石绿', hex: '#6C7F4F',
   },
   fire: {
-    kanji: '火', yomi: 'ひ', line: '侵掠如火', lineZh: '侵掠如火', name: '走进生活',
-    desc: '开口去用。时间、交通、购物、邀约、讲过去、说愿望，到街上去。',
+    kanji: '火', yomi: 'ひ', line: '侵掠如火', lineZh: '侵掠如火', name: '中级',
+    desc: '开始读得下去。N3、N2 的词和语法，配上芥川、中岛敦和菊池宽的原文。',
     art: 'fire', colorName: '墨红', hex: '#8C2F2D',
   },
   mountain: {
-    kanji: '山', yomi: 'やま', line: '不動如山', lineZh: '不动如山', name: '读原文',
-    desc: '最后站稳。读俳句、清少纳言、漱石与贤治的原文，定下之后的路。',
+    kanji: '山', yomi: 'やま', line: '不動如山', lineZh: '不动如山', name: '高级与原典',
+    desc: '最后站稳。N1 的词和语法，俳句、清少纳言、露伴与安吾。读到这里，后面的路没有尽头。',
     art: 'mountain', colorName: '暮山', hex: '#4F6072',
   },
 };
 
-export const lessons = [...wind, ...forest, ...fire, ...mountain].map((l, i) => ({ ...l, n: i + 1 }));
+export const lessons = [...wind, ...forest, ...fire.map((l) => ({ ...l, stage: 'forest' })), ...mountain].map((l, i) => ({ ...l, n: i + 1 }));
 
 export const lessonsOf = (stage) => lessons.filter((l) => l.stage === stage);

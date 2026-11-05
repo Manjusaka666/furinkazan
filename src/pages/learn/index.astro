@@ -3,11 +3,16 @@ import Base from '../../layouts/Base.astro';
 import Enso from '../../components/Enso.astro';
 import { STAGES, lessonsOf } from '../../data/lessons/index.js';
 import { ruby } from '../../lib/ruby.js';
+import { levelsOf, unitsOf, grammarOf } from '../../data/course/index.js';
+import works from '../../data/library/index.json';
+
+const READ = { forest: ['N4'], fire: ['N3', 'N2'], mountain: ['N1'] };
+const readCount = (key) => works.filter((w) => READ[key]?.includes(w.lv)).length;
 ---
-<Base title="课程" desc="四个阶段、二十七课：假名与声音、句子骨架、生活日语、阅读原文。">
+<Base title="课程" desc="从假名到 N1 和原文阅读：主题课、分级词汇、语法与读物，学多少由你定。">
   <div class="page-head">
-    <h1>二十七课，四个阶段</h1>
-    <p>按顺序学，每课大约 20 分钟。第 6 到 23 课的主题与国际交流基金『いろどり 入门』各课相对应，可以配合它的原声一起听。</p>
+    <h1>从假名到原典</h1>
+    <p>四个阶段，没有每日任务，也没有课数上限，词汇和读物会继续增加。第 6 到 23 课的主题与国际交流基金『いろどり 入门』相对应，可以配合它的原声一起听。</p>
   </div>
   {Object.entries(STAGES).map(([key, s]) => (
     <section class="stage-block" id={key} data-stage={key}>
@@ -28,6 +33,17 @@ import { ruby } from '../../lib/ruby.js';
           </li>
         ))}
       </ol>
+      {levelsOf(key).length > 0 && (
+        <ul class="level-links">
+          {levelsOf(key).map(([id, lv]) => (
+            <li>
+              <a href={`/levels/${id}/`}><b>{lv.name} 词汇</b>{lv.words.length} 词，{unitsOf(id).length} 组</a>
+              <a href={`/levels/${id}/grammar/`}><b>{lv.name} 语法</b>{grammarOf(id).length} 个句型</a>
+            </li>
+          ))}
+          {readCount(key) > 0 && <li><a href="/library/"><b>读原文</b>文库里有 {readCount(key)} 部这个难度的作品</a></li>}
+        </ul>
+      )}
     </section>
   ))}
 </Base>

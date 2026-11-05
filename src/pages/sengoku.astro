@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Art from '../components/Art.astro';
+import { EVENTS } from '../data/sengoku.js';
+import works from '../data/library/index.json';
+
+const essays = (await getCollection('culture')).filter((e) => e.data.cat === 'sengoku').sort((a, b) => a.data.order - b.data.order);
+const title = (slug) => works.find((w) => w.slug === slug).title;
+const readings = works.filter((w) => w.cat === 'sengoku');
+---
+<Base title="战国" desc="从应仁之乱到大坂之阵：年表、专题短文和可以直接读的日语原文。" stage="fire">
+  <div class="page-head">
+    <h1>战国</h1>
+    <p>从 1467 年的京都到 1615 年的大坂，一百五十年。下面的年表连着短文和原文；故事有多少可信，短文里都会说。</p>
+  </div>
+  <div class="sengoku-art"><Art name="kawanakajima" sizes="(max-width: 60rem) 100vw, 60rem" widths={[640, 843]} /></div>
+  <section class="stage-block">
+    <h2>年表</h2>
+    <ol class="timeline">
+      {EVENTS.map(([y, text, essay, lib]) => (
+        <li>
+          <b>{y}</b>
+          <span>{text}
+            {essay && <a href={`/culture/${essay}/`}>短文</a>}
+            {lib && <a href={`/library/${lib}/`} lang="ja">{title(lib)}</a>}
+          </span>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <section class="stage-block">
+    <h2>专题短文</h2>
+    {essays.map((e) => (
+      <a class="essay-link" href={`/culture/${e.id}/`}>
+        <strong>{e.data.title}</strong>
+        <span>{e.data.summary}</span>
+      </a>
+    ))}
+  </section>
+  <section class="stage-block">
+    <h2>读原文</h2>
+    <p class="stage-note">{readings.length} 部，都在<a href="/library/#sengoku">文库</a>里。太田牛一的『<span lang="ja">信長公記</span>』可以到<a href="https://ja.wikisource.org/wiki/信長公記" rel="noopener">维基文库</a>读。</p>
+  </section>
+</Base>

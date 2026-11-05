@@ -37,7 +37,7 @@ function next() {
     return card.replaceChildren(el('p', '', '还没有卡片。学完一课后点「完成本课」，生词就会到这里。'), link('/learn/', '去上课'));
   }
   if (!due.length) {
-    return card.replaceChildren(el('p', '', '今天的卡片都复习完了。明天再来，或者继续学新课。'), link('/learn/', '继续学习'));
+    return card.replaceChildren(el('p', '', '到期的卡片都复习完了。可以继续学新内容。'), link('/learn/', '继续学习'));
   }
   show(due[0]);
 }
@@ -52,9 +52,10 @@ function show(id) {
     btn('听发音', 'btn ghost', () => say(id)),
     btn('看答案', 'btn', () => {
       front.innerHTML = ruby(w.ja);
-      const back = el('p', 'back', `${w.zh}（第 ${w.n} 课）`);
+      const back = el('p', 'back', `${w.zh}（${w.n}）`);
       const rate = el('div', 'row');
       const mark = (ok) => () => {
+        deck = getDeck();
         deck = { ...deck, [id]: grade(deck[id], ok, Date.now()) };
         setDeck(deck);
         next();

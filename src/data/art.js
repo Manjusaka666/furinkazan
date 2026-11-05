@@ -18,5 +18,11 @@ export const ART = {
   noh: { title: '能装束 縫箔', by: '佚名', date: '1675–99', alt: '挂在衣架上的十七世纪能装束，金色底子上绣着成簇的花卉。', museum: CMA, url: cma('1974.36') },
   edo: { title: '東海道五十三次 庄野', by: '歌川广重', date: '1833', alt: '广重版画：急雨中，行人和轿夫弓身快步穿过斜坡。', museum: CMA, url: cma('1948.306') },
   food: { title: '名所江戸百景 永代橋佃しま', by: '歌川广重', date: '1858', alt: '广重版画：从永代桥的桥桩间望出去，月夜下的水面上远远泊着佃岛的渔船。', museum: CMA, url: cma('1992.73') },
+  kawanakajima: { title: '信州川中島合戦', by: '歌川广重', date: '约 1843', alt: '广重三联版画：两军隔着蓝色的河流交战，后方是连绵的山。', museum: AIC, url: aic(103289) },
+  nobunaga: { title: '織田信長公清洲城修繕御覧之図', by: '歌川芳藤', date: '1888', alt: '三联版画：信长骑白马，在石墙和城楼前视察修城的工人。', museum: AIC, url: aic(223505) },
+  honnoji: { title: '本能寺に森蘭丸討死の図', by: '歌川芳藤', date: '1886', alt: '三联版画：武士们手持长枪，在木构大殿里混战。', museum: AIC, url: aic(223506) },
+  hideyoshi: { title: '太閤五妻洛東遊観之図', by: '喜多川歌麿', date: '约 1803–04', alt: '歌麿三联版画：秀吉和众女子在樱花与伞盖下赏花。', museum: AIC, url: aic(21530) },
+  kenshin: { title: '霜満軍営秋気清 数行過雁月三更 謙信', by: '月冈芳年', date: '1885–92', alt: '芳年的画：披甲的上杉谦信坐在军幕旁，头上是一轮明月。', museum: AIC, url: aic(212358) },
+  rakuten: { title: '竹田からくり 白楽天と漁夫', by: '窪俊满', date: '19 世纪初', alt: '摺物：白居易坐在小船上，上方有鸟居和桥。', museum: AIC, url: aic(23398) },
   shingen: { title: '九代目市村羽左衛門の信玄', by: '胜川春章', date: '1775', alt: '胜川春章的役者绘：歌舞伎演员市村羽左卫门九世扮演武田信玄。', museum: CMA, url: cma('1921.1270') },
 };

@@ -1,5 +1,5 @@
 import { addCards } from '../lib/srs.js';
-import { getDeck, setDeck, getDone, setDone, getPrefs, setPrefs } from '../lib/store.js';
+import { getDeck, setDeck, getDone, setDone, getPrefs, setPrefs, getUser } from '../lib/store.js';
 
 // Speech uses the device's own Japanese voice: nothing to download, but quality varies by device.
 const synth = window.speechSynthesis;
@@ -44,7 +44,7 @@ const finish = (btn) => {
     && setDeck(addCards(getDeck(), JSON.parse(btn.dataset.vocab), Date.now()));
   if (!saved) return toast('无法保存进度：浏览器禁用了本地存储。');
   btn.disabled = true;
-  btn.textContent = '已完成，生词已加入复习';
+  btn.textContent = btn.dataset.doneText ?? '已完成，生词已加入复习';
 };
 
 document.addEventListener('click', (e) => {
@@ -57,20 +57,29 @@ document.addEventListener('click', (e) => {
 });
 
 // Display preferences apply to the whole site and persist.
-const prefs = getPrefs();
-for (const key of ['hide-rt', 'hide-zh']) if (prefs[key]) document.documentElement.setAttribute(`data-${key}`, '');
+const KEYS = ['hide-rt', 'hide-zh'];
+function applyPrefs() {
+  const prefs = getPrefs();
+  for (const key of KEYS) document.documentElement.toggleAttribute(`data-${key}`, Boolean(prefs[key]));
+  document.querySelectorAll('[data-pref]').forEach((box) => { box.checked = Boolean(prefs[box.dataset.pref]); });
+}
 document.querySelectorAll('[data-pref]').forEach((box) => {
-  const key = box.dataset.pref;
-  box.checked = Boolean(prefs[key]);
   box.addEventListener('change', () => {
-    document.documentElement.toggleAttribute(`data-${key}`, box.checked);
-    prefs[key] = box.checked;
-    setPrefs(prefs);
+    setPrefs({ ...getPrefs(), [box.dataset.pref]: box.checked });
+    applyPrefs();
   });
 });
 
 // Reflect finished lessons wherever they are listed.
-const done = new Set(getDone());
-document.querySelectorAll('[data-lesson]').forEach((a) => a.classList.toggle('done', done.has(a.dataset.lesson)));
-const fin = document.querySelector('[data-finish]');
-if (fin && done.has(fin.dataset.finish)) { fin.disabled = true; fin.textContent = '已完成，生词已加入复习'; }
+function applyDone() {
+  const done = new Set(getDone());
+  document.querySelectorAll('[data-lesson]').forEach((a) => a.classList.toggle('done', done.has(a.dataset.lesson)));
+  const fin = document.querySelector('[data-finish]');
+  if (fin && done.has(fin.dataset.finish)) { fin.disabled = true; fin.textContent = fin.dataset.doneText ?? '已完成，生词已加入复习'; }
+}
+applyPrefs();
+applyDone();
+addEventListener('fk:synced', () => { applyPrefs(); applyDone(); });
+
+// Visitors who never signed in do not download the sync code.
+if (getUser()) import('../lib/sync.js').then((m) => m.start());

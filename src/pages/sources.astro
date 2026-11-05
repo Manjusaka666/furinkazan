@@ -4,18 +4,27 @@ import { ART } from '../data/art.js';
 
 const GROUPS = [
   ['日语教材', [
-    ['『いろどり 生活の日本語』（国际交流基金）', 'https://www.irodori.jpf.go.jp/en/index.html', '本站第 6–23 课的主题顺序参照其入门（A1）。对话和讲解为本站原创，没有复制它的文字、插图或音频。教材和原声请到官网免费获取。'],
+    ['『いろどり 生活の日本語』（国际交流基金）', 'https://www.irodori.jpf.go.jp/en/index.html', '本站第 6–23 课的主题顺序参照其入门（A1），没有复制它的文字、插图或音频。教材和原声请到官网免费获取。'],
     ['JF にほんご e ラーニング みなと', 'https://minato-jf.jp/'],
     ['Marugoto 在线', 'https://www.marugoto-online.jp/'],
     ['JF 日语教育标准', 'https://www.jfstandard.jpf.go.jp/'],
     ['ひろがる（Hirogaru）', 'https://hirogaru-nihongo.jp/'],
     ['NHK WORLD-JAPAN 简明日语（中文版）', 'https://www3.nhk.or.jp/nhkworld/lesson/zh/'],
     ['JLPT 官方样题 N5', 'https://www.jlpt.jp/samples/n5.html'],
-    ['JMdict（EDRDG）', 'https://www.edrdg.org/jmdict/j_jmdict.html', '用于核对词义与读音。'],
+  ]],
+  ['例句与词表', [
+    ['Tatoeba', 'https://tatoeba.org/en/downloads', '课程和词汇里的例句，只取自声明日语为母语的作者，CC BY 2.0 FR。每句都标明了编号和作者，中文译文也来自 Tatoeba，已转为简体。'],
+    ['JLPT 分级词表（Jonathan Waller，由 bluskyo/jlpt_vocabulary 整理）', 'https://github.com/bluskyo/jlpt_vocabulary', 'CC BY。JLPT 官方不公布词表，这是社区整理的版本。'],
+    ['Japanese-Chinese-thesaurus', 'https://github.com/lxl66566/Japanese-Chinese-thesaurus', '中文释义的主要来源，以 Unlicense 发布，但上游来历不明，释义可能有错。'],
+    ['中文维基词典（经 kaikki.org 提取）', 'https://kaikki.org/zhwiktionary/', '补充中文释义，CC BY-SA。'],
+    ['JMdict（EDRDG，经 jmdict-simplified）', 'https://www.edrdg.org/edrdg/licence.html', '没有中文释义的词用它的英文释义，标记为「英」，CC BY-SA 4.0。'],
   ]],
   ['文学原文', [
-    ['青空文库', 'https://www.aozora.gr.jp/', '夏目漱石、宫泽贤治等公版作品的电子本。'],
+    ['青空文库', 'https://www.aozora.gr.jp/', '文库的全文来源，每部作品都标明了底本、入力和校正者。本站只收录作者去世超过七十年的作品。'],
     ['国立国会图书馆数字馆藏', 'https://dl.ndl.go.jp/'],
+    ['维基文库（日文）：信長公記、枕草子', 'https://ja.wikisource.org/wiki/信長公記'],
+    ['维基文库（中文）：白居易、杜甫、李白', 'https://zh.wikisource.org/wiki/春望'],
+    ['中国哲学书电子化计划：论语、孙子', 'https://ctext.org/zh'],
   ]],
   ['历史、艺能与饮食', [
     ['UNESCO：和食', 'https://ich.unesco.org/en/RL/washoku-traditional-dietary-cultures-of-the-japanese-notably-for-the-celebration-of-new-year-00869'],
@@ -39,7 +48,7 @@ const GROUPS = [
 <Base title="资料来源与致谢" desc="本站使用的公开教材、文献、图像与字体。">
   <div class="page-head">
     <h1>资料来源与致谢</h1>
-    <p>课程对话、语法讲解和文化短文由本站编写，没有经过母语教师审校。如果发现错误，请以下面的权威资料为准。</p>
+    <p>例句和读物来自母语者的公开文本。入门课的对话、语法说明、练习题和中文短文由本站编写，没有经过母语教师审校。如果发现错误，请以下面的资料为准。</p>
   </div>
   <div class="src-list">
     {GROUPS.map(([h, items]) => (

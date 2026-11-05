@@ -24,6 +24,8 @@ export const CATS = {
   aesthetics: { ja: '美学{びがく}', zh: '美学' },
   tradition: { ja: '伝統{でんとう}', zh: '传统' },
   food: { ja: '食{しょく}', zh: '饮食' },
+  wakan: { ja: '和漢{わかん}', zh: '中日之间' },
+  sengoku: { ja: '戦国{せんごく}', zh: '战国' },
 };
 
 // [节气, 读音, 大致起始 月-日, 时令词, 读音译文]

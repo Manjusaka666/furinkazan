@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro';
+import Enso from '../../components/Enso.astro';
+import works from '../../data/library/index.json';
+
+const GROUPS = [
+  ['tale', '民间故事', '句子短，重复多，第一次读整篇日语从这里开始。'],
+  ['child', '童话与短篇', '日本孩子在语文课上读的作品。'],
+  ['china', '中国题材', '日本作家写的唐传奇、『论语』和『汉书』，可以和中文原典对读。'],
+  ['modern', '近代小说', '芥川、漱石和太宰。'],
+  ['sengoku', '战国', '菊池宽的合战谭叙述清楚，坂口安吾和幸田露伴更难也更有个性。'],
+  ['essay', '随笔与评论', ''],
+];
+const LINK_ONLY = [
+  ['谷崎潤一郎', 1383], ['吉川英治', 1562], ['北大路魯山人', 1403], ['小川未明', 1475], ['佐藤春夫', 1763],
+];
+const rank = (w) => [w.lv.slice(1) * -1, w.chars];
+const byLevel = (a, b) => rank(a)[0] - rank(b)[0] || rank(a)[1] - rank(b)[1];
+---
+<Base title="文库" desc={`${works.length} 部公版日语原文，按难度排列，带作品导读。`} sysJa>
+  <div class="page-head">
+    <h1>文库</h1>
+    <p>{works.length} 部日本作家的原文，全文来自青空文库。同一组里容易的排在前面，难度标记是本站的估计。这里的书会继续增加。</p>
+  </div>
+  {GROUPS.map(([cat, name, note]) => (
+    <section class="stage-block" id={cat}>
+      <h2>{name}</h2>
+      {note && <p class="stage-note">{note}</p>}
+      <ol class="lesson-list">
+        {works.filter((w) => w.cat === cat).sort(byLevel).map((w) => (
+          <li>
+            <a href={`/library/${w.slug}/`} data-lesson={`read-${w.slug}`}>
+              <Enso />
+              <span class="l-n">{w.lv}</span>
+              <span class="l-title"><span lang="ja">{w.title}　{w.author}</span><span class="l-zh">{w.zh}</span></span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+  <section class="stage-block">
+    <h2>只放链接的作家</h2>
+    <p class="stage-note">这些作家在日本已经进入公有领域，但去世不满七十年，在瑞士和欧盟仍受保护，所以本站不转载全文，请到青空文库阅读。吉川英治写过『新書太閤記』和『三国志』。</p>
+    <ul>
+      {LINK_ONLY.map(([name, id]) => <li><a lang="ja" href={`https://www.aozora.gr.jp/index_pages/person${id}.html`} rel="noopener">{name}</a></li>)}
+    </ul>
+  </section>
+</Base>

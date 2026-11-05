@@ -4,15 +4,17 @@ import latin from '../assets/fonts/latin.woff2?url';
 import kana from '../assets/fonts/kana.woff2?url';
 import brush from '../assets/fonts/brush-core.woff2?url';
 
-const { title, desc, stage, home = false } = Astro.props;
+const { title, desc, stage, home = false, sysJa = false } = Astro.props;
 const fullTitle = home ? title : `${title} | 風林火山`;
 const path = Astro.url.pathname;
 const nav = [
   ['/learn/', '课程'],
   ['/kana/', '假名'],
   ['/review/', '复习'],
+  ['/library/', '文库'],
   ['/culture/', '文化'],
-  ['/history/', '年表'],
+  ['/sengoku/', '战国'],
+  ['/account/', '账号'],
 ];
 const rules = JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }] });
 ---
@@ -23,7 +25,7 @@ const rules = JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eage
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
-    <meta name="theme-color" content="#151512" />
+    <meta name="theme-color" content="#f3f1e6" />
     <link rel="canonical" href={new URL(path, Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:title" content={fullTitle} />
@@ -34,7 +36,7 @@ const rules = JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eage
     {home && <link rel="preload" href={brush} as="font" type="font/woff2" crossorigin />}
     <script type="speculationrules" set:html={rules} is:inline></script>
   </head>
-  <body class:list={[{ home }]} data-stage={stage}>
+  <body class:list={[{ home, 'sys-ja': sysJa }]} data-stage={stage}>
     <a class="skip" href="#main">跳到正文</a>
     <header class="top">
       <a class="logo brush" href="/" lang="ja">風林火山</a>
@@ -46,8 +48,8 @@ const rules = JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eage
     </header>
     <main id="main"><slot /></main>
     <footer class="foot">
-      <p>课程对话与讲解为本站原创，大纲参照国际交流基金『いろどり』入门（A1）的主题，配套原声请到官方网站收听。进度只保存在你的浏览器里。</p>
-      <p><a href="/sources/">资料来源与致谢</a></p>
+      <p>例句来自 Tatoeba，读物来自青空文库，都是母语者写的公开文本；中文讲解和练习题由本站编写，未经母语教师审校。</p>
+      <p><a href="/history/">日本史年表</a>　<a href="/sources/">资料来源与致谢</a></p>
     </footer>
     <div class="toast" role="status" aria-live="polite" id="toast"></div>
     <script>import '../scripts/app.js';</script>

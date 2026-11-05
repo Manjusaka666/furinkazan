@@ -1,0 +1,16 @@
+---
+import { ruby, plain } from '../lib/ruby.js';
+
+const { ex } = Astro.props;
+---
+<ul class="lines solo examples">
+  {ex.map((e) => (
+    <li>
+      <div>
+        <button type="button" class="say-line" lang="ja" data-say={plain(e.ja)} set:html={ruby(e.ja)} />
+        {e.zh && <p class="zh">{e.zh}</p>}
+        <p class="ex-src"><a href={`https://tatoeba.org/sentences/show/${e.id}`} rel="noopener">Tatoeba #{e.id}</a>，{e.by}</p>
+      </div>
+    </li>
+  ))}
+</ul>

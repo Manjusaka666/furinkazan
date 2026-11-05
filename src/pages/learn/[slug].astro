@@ -3,6 +3,8 @@ import Base from '../../layouts/Base.astro';
 import { lessons, STAGES } from '../../data/lessons/index.js';
 import { ruby, plain, reading, rich } from '../../lib/ruby.js';
 import { toRomaji } from '../../lib/kana.js';
+import { lessonExamples } from '../../data/course/index.js';
+import Examples from '../../components/Examples.astro';
 
 export const getStaticPaths = () =>
   lessons.map((l, i) => ({ params: { slug: l.slug }, props: { l, prev: lessons[i - 1], next: lessons[i + 1] } }));
@@ -11,7 +13,9 @@ const { l, prev, next } = Astro.props;
 const s = STAGES[l.stage];
 const showRomaji = l.stage === 'wind' || l.n <= 8; // scaffolding: drop romaji once kana is secure
 const pad = String(l.irodori ?? 0).padStart(2, '0');
-const isSolo = l.dialog.every(([who]) => !who);
+const dialog = l.dialog ?? [];
+const isSolo = dialog.every(([who]) => !who);
+const native = lessonExamples[l.slug];
 const vocabIds = l.vocab.map(([ja]) => plain(ja));
 ---
 <Base title={`第 ${l.n} 课 ${plain(l.title)}`} desc={`${l.zh}。${l.can}`} stage={l.stage}>
@@ -26,10 +30,16 @@ const vocabIds = l.vocab.map(([ja]) => plain(ja));
   </div>
   <div class="lesson-grid">
     <article>
+      {native ? (
+        <section class="sec">
+          <div class="sec-h"><h2 lang="ja">例文</h2><span>母语者写的句子，点一下听发音</span></div>
+          <Examples ex={native} />
+        </section>
+      ) : (
       <section class="sec">
         <div class="sec-h"><h2 lang="ja">会話</h2><span>点句子听发音</span></div>
         <ol class:list={['lines', { solo: isSolo }]}>
-          {l.dialog.map(([who, ja, zh]) => (
+          {dialog.map(([who, ja, zh]) => (
             <li>
               {who && <span class="who" lang="ja">{who}</span>}
               <div>
@@ -40,6 +50,7 @@ const vocabIds = l.vocab.map(([ja]) => plain(ja));
           ))}
         </ol>
       </section>
+      )}
 
       <section class="sec">
         <div class="sec-h"><h2 lang="ja">言葉</h2><span>词汇</span></div>
