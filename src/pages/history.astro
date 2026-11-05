@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { eras } from '../data/eras.js';
+import { ruby, plain } from '../lib/ruby.js';
+---
+<Base title="日本史年表" desc="从绳文到令和的十六个时代，每个时代一句话，并链接到相关的文化短文。" stage="culture">
+  <div class="page-head">
+    <h1>日本史年表</h1>
+    <p>记住时代的名字和顺序，读历史和文学都会轻松很多。早期的起止年代有争议，这里取通行的说法。</p>
+  </div>
+  <ol class="era-list">
+    {eras.map((e) => (
+      <li>
+        <button type="button" class="term era-name brush" lang="ja" style="border:0" data-say={plain(e.ja)} set:html={ruby(e.ja)} />
+        <div>
+          <span class="era-span">{e.span}</span>
+          <strong class="era-mark" style="font-weight:500">{e.mark}</strong>
+          <p>{e.zh}{e.to && <a href={`/culture/${e.to}/`}>　读相关短文</a>}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</Base>

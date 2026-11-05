@@ -1,0 +1,18 @@
+---
+import { Picture } from 'astro:assets';
+import { ART } from '../data/art.js';
+
+const files = import.meta.glob('../assets/art/*.jpg', { eager: true });
+const { name, sizes = '(max-width: 44rem) 100vw, 40rem', caption = true, eager = false, widths = [480, 800, 1200], class: cls } = Astro.props;
+const a = ART[name];
+const src = files[`../assets/art/${name}.jpg`].default;
+const usable = widths.filter((w) => w <= src.width);
+---
+{caption ? (
+  <figure class:list={['art', cls, { tall: src.height > src.width }]}>
+    <Picture {src} formats={['avif', 'webp']} fallbackFormat="jpg" widths={usable} {sizes} alt={a.alt} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : undefined} decoding={eager ? undefined : 'async'} />
+    <figcaption>{a.by}『{a.title}』，{a.date}。<a href={a.url} rel="noopener">{a.museum}</a></figcaption>
+  </figure>
+) : (
+  <Picture {src} formats={['avif', 'webp']} fallbackFormat="jpg" widths={usable} {sizes} alt="" loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : undefined} />
+)}

@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+import latin from '../assets/fonts/latin.woff2?url';
+import kana from '../assets/fonts/kana.woff2?url';
+import brush from '../assets/fonts/brush-core.woff2?url';
+
+const { title, desc, stage, home = false } = Astro.props;
+const fullTitle = home ? title : `${title} | 風林火山`;
+const path = Astro.url.pathname;
+const nav = [
+  ['/learn/', '课程'],
+  ['/kana/', '假名'],
+  ['/review/', '复习'],
+  ['/culture/', '文化'],
+  ['/history/', '年表'],
+];
+const rules = JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }] });
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <meta name="theme-color" content="#151512" />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="website" />
+    <link rel="preload" href={latin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={kana} as="font" type="font/woff2" crossorigin />
+    {home && <link rel="preload" href={brush} as="font" type="font/woff2" crossorigin />}
+    <script type="speculationrules" set:html={rules} is:inline></script>
+  </head>
+  <body class:list={[{ home }]} data-stage={stage}>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="top">
+      <a class="logo brush" href="/" lang="ja">風林火山</a>
+      <nav aria-label="主导航">
+        {nav.map(([href, label]) => (
+          <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}</a>
+        ))}
+      </nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="foot">
+      <p>课程对话与讲解为本站原创，大纲参照国际交流基金『いろどり』入门（A1）的主题，配套原声请到官方网站收听。进度只保存在你的浏览器里。</p>
+      <p><a href="/sources/">资料来源与致谢</a></p>
+    </footer>
+    <div class="toast" role="status" aria-live="polite" id="toast"></div>
+    <script>import '../scripts/app.js';</script>
+  </body>
+</html>

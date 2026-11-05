@@ -1,0 +1,19 @@
+{
+  "name": "furinkazan",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "node --test tests/"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.5",
+    "astro": "^7.4.5",
+    "sharp": "^0.35.5"
+  }
+}

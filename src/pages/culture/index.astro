@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { CATS } from '../../data/eras.js';
+import { ruby } from '../../lib/ruby.js';
+
+const essays = (await getCollection('culture')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="文化" desc="日本的历史、文学、美学、传统艺能与饮食：十五篇标明出处的短文。" stage="culture">
+  <div class="page-head">
+    <h1>文化</h1>
+    <p>十五篇短文，每篇都列出参考来源。文中的日语词点一下就能听。想按时间看，请到<a href="/history/">年表</a>。</p>
+  </div>
+  {Object.entries(CATS).map(([key, c]) => (
+    <section class="cat-block" id={key}>
+      <h2><span lang="ja" style="margin:0;font-size:inherit;color:inherit" set:html={ruby(c.ja)} /><span>{c.zh}</span></h2>
+      {essays.filter((e) => e.data.cat === key).map((e) => (
+        <a class="essay-link" href={`/culture/${e.id}/`}>
+          <strong>{e.data.title}</strong>
+          <span>{e.data.summary}</span>
+        </a>
+      ))}
+    </section>
+  ))}
+</Base>

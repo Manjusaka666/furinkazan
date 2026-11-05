@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import { GOJUON, DAKUON, YOON } from '../lib/kana.js';
+
+---
+<Base title="假名表" desc="平假名与片假名全表：点一下听发音、看笔顺动画和字源，再用四选一练习巩固。" stage="wind">
+  <div class="page-head">
+    <h1>假名表</h1>
+    <p>点任意一格，可以听发音、看笔顺和它从哪个汉字变来。每天学一行，比一口气背完记得牢。</p>
+  </div>
+  <div class="wrap kana-wrap" id="kana" data-script="hira">
+    <div class="kana-tabs" role="radiogroup" aria-label="选择假名种类">
+      <label><input type="radio" name="script" value="hira" checked />平假名</label>
+      <label><input type="radio" name="script" value="kata" />片假名</label>
+    </div>
+
+    <h2 lang="ja">清音</h2>
+    <div class="kana-table">
+      {GOJUON.map((r) => (
+        <div class="kana-row">
+          <span class="r" lang="ja">{r.row}</span>
+          {r.cells.map((c) => c ? (
+            <button type="button" class="kcell" data-kana={JSON.stringify(c)}>
+              <span class="hira" lang="ja">{c[1]}</span><span class="kata" lang="ja">{c[2]}</span><small>{c[0]}</small>
+            </button>
+          ) : <span class="kempty"></span>)}
+        </div>
+      ))}
+    </div>
+
+    <h2 lang="ja">濁音と半濁音</h2>
+    <div class="kana-table">
+      {DAKUON.map((r) => (
+        <div class="kana-row">
+          <span class="r" lang="ja">{r.row}</span>
+          {r.cells.map((c) => (
+            <button type="button" class="kcell" data-kana={JSON.stringify(c)}>
+              <span class="hira" lang="ja">{c[1]}</span><span class="kata" lang="ja">{c[2]}</span><small>{c[0]}</small>
+            </button>
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <h2 lang="ja">拗音</h2>
+    <div class="yoon">
+      {YOON.map((c) => (
+        <button type="button" class="kcell" data-say-kana={c[1]}>
+          <span class="hira" lang="ja">{c[1]}</span><span class="kata" lang="ja">{c[2]}</span><small>{c[0]}</small>
+        </button>
+      ))}
+    </div>
+
+    <h2 id="practice">練習</h2>
+    <div class="trainer" id="trainer">
+      <div class="trainer-opts">
+        <label>练习范围
+          <select id="t-range">
+            <option value="all">全部清音</option>
+            {GOJUON.map((r, i) => <option value={i}>{r.row}</option>)}
+          </select>
+        </label>
+      </div>
+      <p class="prompt" id="t-prompt" lang="ja"></p>
+      <div class="opts" id="t-opts"></div>
+      <p class="score" id="t-score" aria-live="polite">答对 0 题</p>
+    </div>
+  </div>
+
+  <dialog id="k-dialog" aria-labelledby="k-title">
+    <h2 id="k-title" lang="ja" style="text-align:center;font-size:1.3rem;margin-bottom:.6rem"></h2>
+    <svg class="stroke" id="k-stroke" viewBox="0 0 109 109" aria-hidden="true"></svg>
+    <dl class="k-info">
+      <div><dt>读音</dt><dd id="k-roma"></dd></div>
+      <div><dt>另一种写法</dt><dd id="k-other" lang="ja"></dd></div>
+      <div><dt>来自汉字</dt><dd id="k-src" lang="ja"></dd></div>
+    </dl>
+    <div class="k-actions">
+      <button type="button" class="btn" id="k-say">听发音</button>
+      <button type="button" class="btn ghost" id="k-again">再写一遍</button>
+      <button type="button" class="btn ghost" id="k-close">关闭</button>
+    </div>
+  </dialog>
+  <p class="wrap" style="font-size:.85rem;margin-top:1.5rem;color:var(--ink-soft)">笔顺数据来自 <a href="https://kanjivg.tagaini.net/" rel="noopener">KanjiVG</a>（CC BY-SA 3.0）。</p>
+  <script>import '../scripts/kana.js';</script>
+</Base>

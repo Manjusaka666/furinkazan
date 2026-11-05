@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import Art from '../components/Art.astro';
+import { STAGES, lessonsOf, lessons } from '../data/lessons/index.js';
+import { CATS } from '../data/eras.js';
+import { ruby } from '../lib/ruby.js';
+
+const POS = { wind: '60% 30%', forest: 'center 35%', fire: 'center 22%', mountain: 'center 40%' };
+---
+<Base home title="風林火山：从零开始的日语与日本文化" desc="零基础日语课程，从假名到读懂芭蕉与漱石，穿插日本的历史、文学、美学与饮食。基于国际交流基金等公开资料，免费、无需注册。">
+  <div class="home-grid">
+    <section class="hero" aria-labelledby="site-title">
+      <h1 class="banner brush" id="site-title" lang="ja">風林火山</h1>
+      <div class="hero-text">
+        <p class="lede">从第一个假名开始，一直读到芭蕉和漱石。</p>
+        <p>二十七课零基础日语，大纲依照国际交流基金的公开教材。每一课都留一扇窗，通向日本的历史、文学、美学和餐桌。</p>
+        <a class="cta" href="/learn/sounds/" id="continue">开始第一课</a>
+        <div class="today" id="today"></div>
+      </div>
+    </section>
+    <div class="bands">
+      {Object.entries(STAGES).map(([key, s]) => (
+        <a class="band" href={`/learn/#${key}`} data-stage={key} style={`--pos:${POS[key]}`}>
+          <Art name={s.art} caption={false} sizes="(max-width: 34rem) 70vw, (max-width: 62rem) 60vw, 28vw" eager widths={[320, 640]} />
+          <p class="glyph brush" lang="ja"><Fragment set:html={ruby(`${s.kanji}{${s.yomi}}`)} /></p>
+          <div>
+            <h2><span class="line brush" lang="ja">{s.line}</span>{s.name}</h2>
+            <p>{s.desc}</p>
+            <p class="meta">{lessonsOf(key).length} 课 <span data-stage-done={key}></span></p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+  <section class="home-culture">
+    <h2>课与课之间</h2>
+    <p>语言长在文化里。一句 <span lang="ja">いただきます</span> 背后是和食，一个「侘」字背后是一只宋代的茶碗。十五篇短文，都标明了出处，日语词点一下就能听。</p>
+    <ul class="cats">
+      {Object.entries(CATS).map(([k, c]) => <li><a href={`/culture/#${k}`}>{c.zh}</a></li>)}
+      <li><a href="/history/">日本史年表</a></li>
+      <li><a href="/kana/">假名表与笔顺</a></li>
+    </ul>
+  </section>
+  <script>import '../scripts/home.js';</script>
+  <template id="lesson-index" data-slugs={JSON.stringify(lessons.map((l) => [l.slug, l.stage, l.n]))}></template>
+</Base>

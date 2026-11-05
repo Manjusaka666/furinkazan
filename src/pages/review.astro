@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="复习" desc="间隔重复复习卡片：学完一课，生词自动加入，按遗忘规律安排复习。">
+  <div class="page-head">
+    <h1>今天该复习的词</h1>
+    <p>记得的词，下次隔得更久；忘了的词，今天再见一次。间隔依次是 1、2、4、7、15、30、60 天。</p>
+  </div>
+  <div class="review">
+    <div class="stats">
+      <div><b id="r-due">0</b><span>今天待复习</span></div>
+      <div><b id="r-total">0</b><span>卡片总数</span></div>
+      <div><b id="r-long">0</b><span>已记牢（间隔 15 天以上）</span></div>
+    </div>
+    <div class="card" id="r-card" aria-live="polite">
+      <noscript>复习功能需要开启 JavaScript。</noscript>
+    </div>
+  </div>
+  <script>import '../scripts/review.js';</script>
+</Base>

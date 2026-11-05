@@ -1,0 +1,34 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Art from '../../components/Art.astro';
+import { ruby } from '../../lib/ruby.js';
+
+export async function getStaticPaths() {
+  const essays = await getCollection('culture');
+  return essays.map((e) => ({ params: { slug: e.id }, props: { e } }));
+}
+const { e } = Astro.props;
+const { Content } = await render(e);
+const { title, ja, summary, art, art2, sources } = e.data;
+---
+<Base title={title} desc={summary} stage="culture">
+  <header class="essay-head">
+    <p class="kicker" lang="ja" set:html={ruby(ja)} />
+    <h1>{title}</h1>
+    <p class="sum">{summary}</p>
+  </header>
+  <article class="essay">
+    {art && <Art name={art} eager />}
+    <div class="prose">
+      <Content />
+    </div>
+    {art2 && <Art name={art2} />}
+    <section class="refs">
+      <h2>参考来源</h2>
+      <ul>
+        {sources.map((s) => <li><a href={s.u} rel="noopener">{s.t}</a></li>)}
+      </ul>
+    </section>
+  </article>
+</Base>

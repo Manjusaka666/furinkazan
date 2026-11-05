@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import Enso from '../../components/Enso.astro';
+import { STAGES, lessonsOf } from '../../data/lessons/index.js';
+import { ruby } from '../../lib/ruby.js';
+---
+<Base title="课程" desc="四个阶段、二十七课：假名与声音、句子骨架、生活日语、阅读原文。">
+  <div class="page-head">
+    <h1>二十七课，四个阶段</h1>
+    <p>按顺序学，每课大约 20 分钟。第 6 到 23 课的主题与国际交流基金『いろどり 入门』各课相对应，可以配合它的原声一起听。</p>
+  </div>
+  {Object.entries(STAGES).map(([key, s]) => (
+    <section class="stage-block" id={key} data-stage={key}>
+      <div class="stage-title">
+        <span class="brush" lang="ja">{s.kanji}</span>
+        <h2>{s.name}</h2>
+        <span lang="ja">{s.line}</span>
+      </div>
+      <p class="stage-note">{s.desc}</p>
+      <ol class="lesson-list">
+        {lessonsOf(key).map((l) => (
+          <li>
+            <a href={`/learn/${l.slug}/`} data-lesson={l.slug}>
+              <Enso />
+              <span class="l-n">{l.n}</span>
+              <span class="l-title"><span lang="ja" set:html={ruby(l.title)} /><span class="l-zh">{l.zh}</span></span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</Base>
