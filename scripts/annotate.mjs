@@ -125,7 +125,7 @@ for (const [n, item] of items.entries()) {
       const orig = item.plain.slice(t.at, t.at + t.m.length);
       if (!s || !KANJI_RUN.test(orig)) { out += orig; continue; }
       const parts = t.m.split(KANJI_RUN);
-      const m = hira(s.read).match(new RegExp(`^${parts.map((p) => (KANJI_RUN.test(p) ? '(.+?)' : hira(p))).join('')}$`));
+      const m = hira(s.read).replace(/ /g, '').match(new RegExp(`^${parts.map((p) => (KANJI_RUN.test(p) ? '(.+?)' : hira(p))).join('')}$`));
       let i = 1;
       out += m && orig === t.m ? parts.map((p) => (KANJI_RUN.test(p) ? `${p}{${m[i++]}}` : p)).join('') : orig;
     }
