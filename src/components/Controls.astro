@@ -4,6 +4,6 @@ const { zh = true } = Astro.props;
 <div class="controls" role="group" aria-label="显示选项">
   <label><input type="checkbox" data-pref="hide-ro" />隐藏罗马音</label>
   <label><input type="checkbox" data-pref="hide-rt" />隐藏假名注音</label>
-  {zh && <label><input type="checkbox" data-pref="hide-zh" />隐藏中文，先靠听</label>}
+  {zh && <label><input type="checkbox" data-pref="hide-zh" />隐藏中文，先自己读</label>}
   <slot />
 </div>

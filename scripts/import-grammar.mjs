@@ -137,12 +137,8 @@ function transform(slug, root, links) {
       if (/^toggle(All)?\(/.test(on)) { setAttr(n, 'data-reveal', arg); setAttr(n, 'href', '#'); }
       if (/^flip\(/.test(on)) { setAttr(n, 'data-flip', arg); setAttr(n, 'href', '#'); }
       if (/fadeIn|fadeOut/.test(on)) { setAttr(n, 'data-reveal', on.match(/\$\('#?([\w-]+)/)?.[1] ?? ''); setAttr(n, 'href', '#'); }
-      if (/^(showModal|playClip)\(/.test(on)) {
-        setAttr(n, 'data-say', textOf(n).trim());
-        setAttr(n, 'data-au', `kana/${arg}.aac`);
-        setAttr(n, 'href', '#');
-        n.attrs = n.attrs.filter((a) => a.name !== 'onclick');
-      }
+      // The book's kana clips name no speaker, so the site can't call them native: keep the kana as plain text.
+      if (/^(showModal|playClip)\(/.test(on)) return swap(n, n.childNodes);
       n.attrs = n.attrs.filter((a) => a.name !== 'onclick');
     }
     if (n.nodeName === 'img') {
@@ -237,7 +233,7 @@ for (const slug of order) {
   transform(slug, main, images);
   const title = textOf(h1).trim();
   if (SECTIONS[slug]) section = SECTIONS[slug];
-  const html = serialize(main).replace(/>\s+</g, '><').replace(/\s*\n\s*/g, ' ');
+  const html = serialize(main).replace(/>\s+</g, '><').replace(/\s*\n\s*/g, ' ').replace(' - 点击可以听录音', '');
   writeFileSync(path.join(OUT, `${slug}.json`), JSON.stringify({ slug, title, section, html, orig: attrOf(orig ?? {}, 'href') ?? 'http://guidetojapanese.org/learn/' }));
   toc.push({ slug, title, section });
   console.log(slug, title, section, html.length);

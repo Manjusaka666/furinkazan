@@ -3,10 +3,11 @@ import Base from '../layouts/Base.astro';
 import { GOJUON, DAKUON, YOON } from '../lib/kana.js';
 
 ---
-<Base title="假名表" desc="平假名与片假名全表：点一下听发音、看笔顺动画和字源，再用假名认读卡片巩固。" stage="wind">
+<Base title="假名表" desc="平假名与片假名全表：看笔顺动画和字源，再用假名认读卡片巩固。" stage="wind">
   <div class="page-head">
     <h1>假名表</h1>
-    <p>点任意一格，可以听发音、看笔顺和它从哪个汉字变来。按自己的节奏来，可以一行一行地学，也可以一口气看完。</p>
+    <p>点任意一格，可以看笔顺和它从哪个汉字变来。按自己的节奏来，可以一行一行地学，也可以一口气看完。</p>
+    <p>假名的发音请到 NHK 听：<a href="https://www3.nhk.or.jp/nhkworld/lesson/zh/letters/hiragana.html" rel="noopener">平假名</a>、<a href="https://www3.nhk.or.jp/nhkworld/lesson/zh/letters/katakana.html" rel="noopener">片假名</a>。本站只放能确认是母语者的录音，假名暂时没有这样的完整来源，所以这里不放声音。</p>
   </div>
   <div class="wrap kana-wrap" id="kana" data-script="hira">
     <div class="kana-tabs" role="radiogroup" aria-label="选择假名种类">
@@ -45,9 +46,9 @@ import { GOJUON, DAKUON, YOON } from '../lib/kana.js';
     <h2 lang="ja">拗音</h2>
     <div class="yoon">
       {YOON.map((c) => (
-        <button type="button" class="kcell" data-say-kana={c[1]} data-au={`kana/${c[0]}.aac`}>
+        <span class="kcell">
           <span class="hira" lang="ja">{c[1]}</span><span class="kata" lang="ja">{c[2]}</span><small>{c[0]}</small>
-        </button>
+        </span>
       ))}
     </div>
 
@@ -76,8 +77,7 @@ import { GOJUON, DAKUON, YOON } from '../lib/kana.js';
       <div><dt>来自汉字</dt><dd id="k-src" lang="ja"></dd></div>
     </dl>
     <div class="k-actions">
-      <button type="button" class="btn" id="k-say">听发音</button>
-      <button type="button" class="btn ghost" id="k-again">再写一遍</button>
+      <button type="button" class="btn" id="k-again">再写一遍</button>
       <button type="button" class="btn ghost" id="k-close">关闭</button>
     </div>
   </dialog>

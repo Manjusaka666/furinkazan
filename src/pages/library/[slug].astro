@@ -17,7 +17,7 @@ const { w } = Astro.props;
     {w.subtitle && <p class="sub" lang="ja">{w.subtitle}</p>}
     <p class="sub" lang="ja">{w.author}{w.translator && `　${w.translator} 訳`}</p>
   </header>
-  <Controls zh={false}><button type="button" class="btn ghost" id="read-aloud">用设备语音朗读选中的文字或当前段</button></Controls>
+  <Controls zh={false} />
   <article class="reader">
     <p class="guide">作者去世于 1955 年以前，用词和今天不完全相同。{/旧/.test(w.kana) ? '本文用历史假名，罗马音按现代读法生成，仅供参考。' : '罗马音由程序生成，以原文的振假名为准。'}</p>
     <div class="text" id="text" lang="ja" data-slug={w.slug}>
